@@ -8,6 +8,9 @@ package org.dianna.core;
 import java.io.Serializable;
 import java.io.InputStream;
 import java.io.IOException;
+
+import org.dianna.core.utils.DUtils;
+
 import com.google.bitcoin.core.Sha256Hash;
 import com.google.bitcoin.core.ECKey;
 import com.google.protobuf.ByteString;
@@ -77,7 +80,7 @@ public class DTransaction {
         } catch (IOException e) {
             throw new DProtocolException(e.getMessage());
         }
-        PopulateFromProto(tx);
+        populateFromProto(tx);
     }
 
     /**
@@ -92,7 +95,7 @@ public class DTransaction {
         } catch (InvalidProtocolBufferException e) {
             throw new DProtocolException(e.getMessage());
         }
-        PopulateFromProto(tx);
+        populateFromProto(tx);
     }
 
     /**
@@ -100,7 +103,7 @@ public class DTransaction {
      * @param tx
      * @throws org.dianna.core.DProtocolException
      */
-    private void PopulateFromProto(Protos.DomainTransaction tx) throws DProtocolException {
+    private void populateFromProto(Protos.DomainTransaction tx) throws DProtocolException {
         version=TRANSACTION_VERSION;
         if (tx.hasPrevTransaction()) {
             if (tx.getPrevTransaction().size()!=32) {

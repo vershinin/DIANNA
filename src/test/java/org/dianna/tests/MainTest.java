@@ -8,7 +8,7 @@ package org.dianna.tests;
 import org.bouncycastle.util.encoders.Hex;
 import org.dianna.core.DProtocolException;
 import org.dianna.core.DTransaction;
-import org.dianna.core.DUtils;
+import org.dianna.core.utils.DUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
