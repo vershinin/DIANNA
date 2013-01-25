@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author pentarh
  */
-public class DNetworkParameters implements Serializable {
+public class NetworkParameters implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**

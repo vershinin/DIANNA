@@ -3,16 +3,16 @@ package org.dianna.core.message;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.dianna.core.DTransaction;
 import org.dianna.core.Protos;
-import org.dianna.core.Protos.Block;
-import org.dianna.core.Protos.BlockHeader;
+import org.dianna.core.Protos.DiaBlock;
+import org.dianna.core.Protos.DiaBlockHeader;
+import org.dianna.core.Transaction;
 import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class DBlock extends DMessage {
+public class Block extends Message {
 
 	private int version;
 	private Sha256Hash prevBlockHash;
@@ -21,23 +21,23 @@ public class DBlock extends DMessage {
 	private BigDecimal price;
 	private Sha256Hash merkleRootHash;
 
-	private List<DTransaction> transactions;
+	private List<Transaction> transactions;
 
-	public DBlock(byte[] msg) {
+	public Block(byte[] msg) {
 		super(msg);
 	}
 
 	@Override
 	protected void parse() {
 		try {
-			Block block = Protos.Block.parseFrom(msg);
+			DiaBlock block = Protos.DiaBlock.parseFrom(msg);
 			populateHeader(block.getHeader());
 		} catch (InvalidProtocolBufferException e) {
 
 		}
 	}
 
-	private void populateHeader(BlockHeader header) {
+	private void populateHeader(DiaBlockHeader header) {
 		this.setVersion(header.getVersion());
 		this.setPrevBlockHash(new Sha256Hash(header.getPrevBlockHash().toByteArray()));
 		this.setTimestamp(new DateTime(header.getTimestamp()));
@@ -98,11 +98,17 @@ public class DBlock extends DMessage {
 		this.merkleRootHash = merkleRootHash;
 	}
 
-	public List<DTransaction> getTransactions() {
+	public List<Transaction> getTransactions() {
 		return transactions;
 	}
 
-	public void setTransactions(List<DTransaction> transactions) {
+	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
+	}
+
+	@Override
+	public String toString() {
+		// TODO implement
+		return super.toString();
 	}
 }

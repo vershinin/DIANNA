@@ -11,7 +11,7 @@ import com.google.bitcoin.core.Utils;
  * Wrapper to Bitcoin Utils class
  * @author pentarh
  */
-public class DUtils extends Utils {
+public class DiannaUtils extends Utils {
 
     /**
      * Return truncated string used in toString() objects outputs

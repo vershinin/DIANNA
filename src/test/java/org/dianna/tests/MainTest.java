@@ -7,8 +7,8 @@ package org.dianna.tests;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.dianna.core.DProtocolException;
-import org.dianna.core.DTransaction;
-import org.dianna.core.utils.DUtils;
+import org.dianna.core.Transaction;
+import org.dianna.core.utils.DiannaUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,19 +52,19 @@ public class MainTest {
 		// Just fake fee trans
 		Sha256Hash feeTrans = Sha256Hash.create(new byte[32]);
 		// Create "new domain" transaction
-		DTransaction tx = new DTransaction(domain, value, feeTrans, null, pub);
+		Transaction tx = new Transaction(domain, value, feeTrans, null, pub);
 		tx.Sign(key);
 		byte[] payload = tx.getSerialized();
 		System.out.println(tx.toString());
-		String serString = DUtils.bytesToHexString(payload);
+		String serString = DiannaUtils.bytesToHexString(payload);
 		System.out.println("SERIALIZED: " + serString);
 		System.out.println("SERIALIZED SIZE: " + serString.length());
 
 		// Deserialize transaction
 		byte[] ser = Hex.decode(serString);
-		DTransaction tx2;
+		Transaction tx2;
 		try {
-			tx2 = new DTransaction(ser);
+			tx2 = new Transaction(ser);
 		} catch (DProtocolException e) {
 			System.out.println("ERROR: " + e.getMessage());
 			return;

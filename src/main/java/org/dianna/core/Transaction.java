@@ -5,14 +5,13 @@
 
 package org.dianna.core;
 
-import java.io.Serializable;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
-import org.dianna.core.utils.DUtils;
+import org.dianna.core.utils.DiannaUtils;
 
-import com.google.bitcoin.core.Sha256Hash;
 import com.google.bitcoin.core.ECKey;
+import com.google.bitcoin.core.Sha256Hash;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -20,7 +19,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
  *
  * @author pentarh
  */
-public class DTransaction {
+public class Transaction {
     private static final int TRANSACTION_VERSION=1;
 
     /**
@@ -58,7 +57,7 @@ public class DTransaction {
      */
     private byte[] signature;
 
-    public DTransaction(byte[] domain, byte[] value, Sha256Hash feeTransaction, Sha256Hash prevTransaction, byte[] nextPubkey) {
+    public Transaction(byte[] domain, byte[] value, Sha256Hash feeTransaction, Sha256Hash prevTransaction, byte[] nextPubkey) {
         this.version=TRANSACTION_VERSION;
         this.domain=domain;
         this.value=value;
@@ -73,10 +72,10 @@ public class DTransaction {
      * @param stream
      * @throws org.dianna.core.DProtocolException
      */
-    public DTransaction(InputStream stream) throws DProtocolException {
-        Protos.DomainTransaction tx;
+    public Transaction(InputStream stream) throws DProtocolException {
+        Protos.DiaDomainTransaction tx;
         try {
-            tx=Protos.DomainTransaction.parseFrom(stream);
+            tx=Protos.DiaDomainTransaction.parseFrom(stream);
         } catch (IOException e) {
             throw new DProtocolException(e.getMessage());
         }
@@ -88,10 +87,10 @@ public class DTransaction {
      * @param serializedBytes
      * @throws DProtocolException
      */
-    public DTransaction(byte[] serializedBytes) throws DProtocolException {
-        Protos.DomainTransaction tx;
+    public Transaction(byte[] serializedBytes) throws DProtocolException {
+        Protos.DiaDomainTransaction tx;
         try {
-            tx=Protos.DomainTransaction.parseFrom(serializedBytes);
+            tx=Protos.DiaDomainTransaction.parseFrom(serializedBytes);
         } catch (InvalidProtocolBufferException e) {
             throw new DProtocolException(e.getMessage());
         }
@@ -99,11 +98,11 @@ public class DTransaction {
     }
 
     /**
-     * Wrapper to protobuf DomainTransaction class
+     * Wrapper to protobuf DiaDomainTransaction class
      * @param tx
      * @throws org.dianna.core.DProtocolException
      */
-    private void populateFromProto(Protos.DomainTransaction tx) throws DProtocolException {
+    private void populateFromProto(Protos.DiaDomainTransaction tx) throws DProtocolException {
         version=TRANSACTION_VERSION;
         if (tx.hasPrevTransaction()) {
             if (tx.getPrevTransaction().size()!=32) {
@@ -130,7 +129,7 @@ public class DTransaction {
      * @return
      */
     public byte[] getSimpleSerialized() {
-        Protos.DomainTransactionSimple.Builder dBuilder=Protos.DomainTransactionSimple.newBuilder()
+        Protos.DiaDomainTransactionSimple.Builder dBuilder=Protos.DiaDomainTransactionSimple.newBuilder()
                 .setVersion(version)
                 .setFeeTransaction(ByteString.copyFrom(feeTransaction.getBytes()))
                 .setDomain(ByteString.copyFrom(domain))
@@ -144,7 +143,7 @@ public class DTransaction {
     }
 
     public byte[] getSerialized() {
-         Protos.DomainTransaction.Builder dBuilder=Protos.DomainTransaction.newBuilder()
+         Protos.DiaDomainTransaction.Builder dBuilder=Protos.DiaDomainTransaction.newBuilder()
                 .setVersion(version)
                 .setFeeTransaction(ByteString.copyFrom(feeTransaction.getBytes()))
                 .setDomain(ByteString.copyFrom(domain))
@@ -164,7 +163,7 @@ public class DTransaction {
      */
     public void Sign(ECKey key) {
         // Signing double hash of serialized simplified transaction
-        byte[] payload=DUtils.doubleDigest(getSimpleSerialized());
+        byte[] payload=DiannaUtils.doubleDigest(getSimpleSerialized());
         signature=key.sign(payload);
     }
 
@@ -182,13 +181,13 @@ public class DTransaction {
         if (domain == null) {
             throw new DProtocolException("Domain is empty: NULL");
         }
-        if (domain.length<=0 || domain.length > DConstants.MAX_DOMAIN_LENGTH) {
+        if (domain.length<=0 || domain.length > Constants.MAX_DOMAIN_LENGTH) {
             throw new DProtocolException("Domain length out of bounds: "+domain.length);
         }
         if (value == null) {
             throw new DProtocolException("Value is empty: NULL");
         }
-        if (value.length<=0 || value.length > DConstants.MAX_VALUE_LENGTH) {
+        if (value.length<=0 || value.length > Constants.MAX_VALUE_LENGTH) {
             throw new DProtocolException("Value length out of bounds: "+value.length);
         }
         if (nextPubkey==null){
@@ -214,9 +213,9 @@ public class DTransaction {
         }
         // Try to guess string from domain and value bytes. Its most likely a string
         s+="   domain: " + ByteString.copyFrom(domain).toStringUtf8() + "\n";
-        s+="   value: " + DUtils.strTruncate(ByteString.copyFrom(value).toStringUtf8(),60) + " (" + value.length + " bytes)" + "\n";
-        s+="   nextPubkey: " + DUtils.bytesToHexString(nextPubkey) + "\n";
-        s+="   signature: " + DUtils.bytesToHexString(signature) + "\n";
+        s+="   value: " + DiannaUtils.strTruncate(ByteString.copyFrom(value).toStringUtf8(),60) + " (" + value.length + " bytes)" + "\n";
+        s+="   nextPubkey: " + DiannaUtils.bytesToHexString(nextPubkey) + "\n";
+        s+="   signature: " + DiannaUtils.bytesToHexString(signature) + "\n";
         return s;
     }
 

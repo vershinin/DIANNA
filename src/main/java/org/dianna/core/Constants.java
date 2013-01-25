@@ -9,7 +9,7 @@ package org.dianna.core;
  *
  * @author pentarh
  */
-public class DConstants {
+public class Constants {
     /**
      * Max length of domain. Note: Minimum leght is 1 - hardcoded
      */
