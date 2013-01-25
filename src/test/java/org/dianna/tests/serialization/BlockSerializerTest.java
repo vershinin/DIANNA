@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.dianna.core.exception.ValidationException;
-import org.dianna.core.message.Block;
 import org.dianna.core.message.Message.MessageType;
+import org.dianna.core.message.payload.Block;
 import org.dianna.core.serialization.payload.BlockSerializer;
 import org.dianna.tests.factory.BlockFactory;
 import org.junit.Test;

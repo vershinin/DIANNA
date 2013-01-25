@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.dianna.core;
+package org.dianna.core.exception;
 
 /**
  *

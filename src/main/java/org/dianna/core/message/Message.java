@@ -1,5 +1,7 @@
 package org.dianna.core.message;
 
+import org.dianna.core.message.payload.Payload;
+
 public class Message {
 	public enum MessageType {
 		PING,

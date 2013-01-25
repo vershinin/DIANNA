@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.dianna.core.message.Message.MessageType;
-import org.dianna.core.message.Payload;
+import org.dianna.core.message.payload.Payload;
 import org.dianna.core.serialization.payload.PayloadSerializer;
 
 import com.google.common.collect.Maps;

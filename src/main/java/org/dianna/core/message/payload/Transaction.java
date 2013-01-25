@@ -3,20 +3,19 @@
  * and open the template in the editor.
  */
 
-package org.dianna.core.serialization.payload;
+package org.dianna.core.message.payload;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
 import org.dianna.core.Constants;
-import org.dianna.core.DProtocolException;
 import org.dianna.core.Protos;
 import org.dianna.core.Protos.DiaDomainTransaction;
 import org.dianna.core.Protos.DiaDomainTransactionSimple;
 import org.dianna.core.Protos.DiaDomainTransactionSimple.Builder;
+import org.dianna.core.exception.DProtocolException;
 import org.dianna.core.message.Message;
-import org.dianna.core.message.Payload;
 import org.dianna.core.utils.DiannaUtils;
 
 import com.google.bitcoin.core.ECKey;
@@ -87,7 +86,7 @@ public class Transaction extends Payload {
 	 * input stream
 	 * 
 	 * @param stream
-	 * @throws org.dianna.core.DProtocolException
+	 * @throws org.dianna.core.exception.DProtocolException
 	 */
 	public Transaction(InputStream stream) throws DProtocolException {
 		Protos.DiaDomainTransaction tx;
@@ -120,7 +119,7 @@ public class Transaction extends Payload {
 	 * Wrapper to protobuf DiaDomainTransaction class
 	 * 
 	 * @param tx
-	 * @throws org.dianna.core.DProtocolException
+	 * @throws org.dianna.core.exception.DProtocolException
 	 */
 	private void populateFromProto(Protos.DiaDomainTransaction tx) throws DProtocolException {
 		setVersion(TRANSACTION_VERSION);

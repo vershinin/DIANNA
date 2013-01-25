@@ -6,10 +6,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 
-import org.dianna.core.message.Block;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
-import org.dianna.core.message.Payload;
+import org.dianna.core.message.payload.Block;
+import org.dianna.core.message.payload.Payload;
 import org.dianna.core.serialization.MessageSerializer;
 import org.dianna.core.serialization.impl.ContentSerializer;
 import org.dianna.core.serialization.impl.MessageSerializerImpl;

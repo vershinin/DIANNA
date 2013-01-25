@@ -3,7 +3,7 @@ package org.dianna.tests;
 import static org.junit.Assert.assertEquals;
 
 import org.dianna.core.Protos.DiaBlock;
-import org.dianna.core.message.Block;
+import org.dianna.core.message.payload.Block;
 import org.dianna.tests.factory.BlockFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;

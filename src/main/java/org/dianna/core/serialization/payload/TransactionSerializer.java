@@ -1,13 +1,11 @@
 package org.dianna.core.serialization.payload;
 
-import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
-import org.bouncycastle.jce.ECKeyUtil;
 import org.dianna.core.Protos.DiaDomainTransaction;
 import org.dianna.core.Protos.DiaDomainTransaction.Builder;
 import org.dianna.core.message.Message.MessageType;
-import org.dianna.core.message.Payload;
+import org.dianna.core.message.payload.Payload;
+import org.dianna.core.message.payload.Transaction;
 
-import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.Sha256Hash;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;

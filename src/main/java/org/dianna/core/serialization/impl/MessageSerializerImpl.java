@@ -4,7 +4,7 @@ import org.dianna.core.Protos.DiaMessage;
 import org.dianna.core.Protos.DiaMessage.Builder;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
-import org.dianna.core.message.Payload;
+import org.dianna.core.message.payload.Payload;
 import org.dianna.core.serialization.MessageSerializer;
 
 import com.google.protobuf.ByteString;

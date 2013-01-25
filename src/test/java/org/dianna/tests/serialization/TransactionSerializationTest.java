@@ -3,8 +3,8 @@ package org.dianna.tests.serialization;
 import static org.junit.Assert.assertEquals;
 
 import org.dianna.core.message.Message.MessageType;
-import org.dianna.core.message.Payload;
-import org.dianna.core.serialization.payload.Transaction;
+import org.dianna.core.message.payload.Payload;
+import org.dianna.core.message.payload.Transaction;
 import org.dianna.core.serialization.payload.TransactionSerializer;
 import org.dianna.tests.factory.TransactionFactory;
 import org.junit.Test;

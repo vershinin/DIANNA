@@ -8,7 +8,7 @@ import org.dianna.core.Protos.DiaBlock;
 import org.dianna.core.Protos.DiaBlockHeader;
 import org.dianna.core.Protos.DiaBlockHeader.DiaAuxData;
 import org.dianna.core.Protos.DiaBlockHeader.Builder;
-import org.dianna.core.message.Block;
+import org.dianna.core.message.payload.Block;
 import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;

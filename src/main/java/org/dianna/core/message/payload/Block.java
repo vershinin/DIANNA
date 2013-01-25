@@ -1,9 +1,8 @@
-package org.dianna.core.message;
+package org.dianna.core.message.payload;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.dianna.core.serialization.payload.Transaction;
 import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;

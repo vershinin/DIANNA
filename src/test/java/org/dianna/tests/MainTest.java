@@ -6,8 +6,8 @@
 package org.dianna.tests;
 
 import org.bouncycastle.util.encoders.Hex;
-import org.dianna.core.DProtocolException;
-import org.dianna.core.serialization.payload.Transaction;
+import org.dianna.core.exception.DProtocolException;
+import org.dianna.core.message.payload.Transaction;
 import org.dianna.core.utils.DiannaUtils;
 import org.junit.Ignore;
 import org.junit.Test;

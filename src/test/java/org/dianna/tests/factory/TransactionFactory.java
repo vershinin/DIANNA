@@ -1,8 +1,7 @@
 package org.dianna.tests.factory;
 
-import org.bouncycastle.jce.ECKeyUtil;
 import org.bouncycastle.util.encoders.Hex;
-import org.dianna.core.serialization.payload.Transaction;
+import org.dianna.core.message.payload.Transaction;
 
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.Sha256Hash;

@@ -1,7 +1,7 @@
 package org.dianna.core.serialization.payload;
 
 import org.dianna.core.message.Message.MessageType;
-import org.dianna.core.message.Payload;
+import org.dianna.core.message.payload.Payload;
 
 public interface PayloadSerializer {
 
