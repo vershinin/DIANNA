@@ -9,7 +9,6 @@ import org.dianna.core.Protos.DiaBlock;
 import org.dianna.core.Protos.DiaBlock.Builder;
 import org.dianna.core.Protos.DiaBlockHeader;
 import org.dianna.core.Protos.DiaBlockHeader.DiaAuxData;
-import org.dianna.core.Transaction;
 import org.dianna.core.exception.ValidationException;
 import org.dianna.core.message.Block;
 import org.dianna.core.message.Message;

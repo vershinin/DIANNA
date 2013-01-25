@@ -1,11 +1,13 @@
 package org.dianna.core.serialization.payload;
 
+import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
+import org.bouncycastle.jce.ECKeyUtil;
 import org.dianna.core.Protos.DiaDomainTransaction;
 import org.dianna.core.Protos.DiaDomainTransaction.Builder;
-import org.dianna.core.Transaction;
 import org.dianna.core.message.Message.MessageType;
 import org.dianna.core.message.Payload;
 
+import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.Sha256Hash;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -25,14 +27,21 @@ public class TransactionSerializer implements PayloadSerializer {
 		} catch (InvalidProtocolBufferException e) {
 			return null; // TODO log
 		}
-		transaction.getDomain();
-		transaction.getValue();
-		transaction.getVersion();
-		transaction.getNextPubkey();
-		transaction.getPrevTransaction();
-		transaction.getSignature();
 
-		return null;
+		Transaction t = new Transaction();
+		t.setDomain(transaction.getDomain().toByteArray());
+		t.setValue(transaction.getValue().toByteArray());
+		t.setVersion(transaction.getVersion());
+		t.setNextPubkey(transaction.getNextPubkey().toByteArray());
+		t.setSignature(transaction.getSignature().toByteArray());
+		t.setFeeTransaction(new Sha256Hash(transaction.getFeeTransaction().toByteArray()));
+
+		ByteString prevTransaction = transaction.getPrevTransaction();
+		if (!prevTransaction.isEmpty()) {
+			t.setPrevTransaction(new Sha256Hash(prevTransaction.toByteArray()));
+		}
+
+		return t;
 	}
 
 	DiaDomainTransaction serialize(Transaction transaction) {

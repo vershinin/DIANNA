@@ -3,11 +3,18 @@
  * and open the template in the editor.
  */
 
-package org.dianna.core;
+package org.dianna.core.serialization.payload;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
+import org.dianna.core.Constants;
+import org.dianna.core.DProtocolException;
+import org.dianna.core.Protos;
+import org.dianna.core.Protos.DiaDomainTransaction;
+import org.dianna.core.Protos.DiaDomainTransactionSimple;
+import org.dianna.core.Protos.DiaDomainTransactionSimple.Builder;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Payload;
 import org.dianna.core.utils.DiannaUtils;
@@ -60,6 +67,10 @@ public class Transaction extends Payload {
 	 * Transaction signature
 	 */
 	private byte[] signature;
+
+	public Transaction() {
+
+	}
 
 	public Transaction(byte[] domain, byte[] value, Sha256Hash feeTransaction, Sha256Hash prevTransaction,
 			byte[] nextPubkey) {
@@ -152,8 +163,8 @@ public class Transaction extends Payload {
 	}
 
 	public byte[] getSerialized() {
-		Protos.DiaDomainTransaction.Builder dBuilder = Protos.DiaDomainTransaction.newBuilder().setVersion(getVersion())
-				.setFeeTransaction(ByteString.copyFrom(getFeeTransaction().getBytes()))
+		Protos.DiaDomainTransaction.Builder dBuilder = Protos.DiaDomainTransaction.newBuilder()
+				.setVersion(getVersion()).setFeeTransaction(ByteString.copyFrom(getFeeTransaction().getBytes()))
 				.setDomain(ByteString.copyFrom(getDomain())).setValue(ByteString.copyFrom(getValue()))
 				.setNextPubkey(ByteString.copyFrom(getNextPubkey())).setSignature(ByteString.copyFrom(getSignature()));
 		if (getPrevTransaction() != null) {
@@ -284,6 +295,55 @@ public class Transaction extends Payload {
 
 	public void setSignature(byte[] signature) {
 		this.signature = signature;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(domain);
+		result = prime * result + ((feeTransaction == null) ? 0 : feeTransaction.hashCode());
+		result = prime * result + Arrays.hashCode(nextPubkey);
+		result = prime * result + ((prevTransaction == null) ? 0 : prevTransaction.hashCode());
+		result = prime * result + Arrays.hashCode(signature);
+		result = prime * result + Arrays.hashCode(value);
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transaction other = (Transaction) obj;
+		if (!Arrays.equals(domain, other.domain))
+			return false;
+		if (feeTransaction == null) {
+			if (other.feeTransaction != null)
+				return false;
+		} else if (!feeTransaction.equals(other.feeTransaction))
+			return false;
+		if (!Arrays.equals(nextPubkey, other.nextPubkey))
+			return false;
+		if (prevTransaction == null) {
+			if (other.prevTransaction != null)
+				return false;
+		} else if (!prevTransaction.equals(other.prevTransaction))
+			return false;
+		if (!Arrays.equals(signature, other.signature))
+			return false;
+		if (!Arrays.equals(value, other.value))
+			return false;
+		if (version == null) {
+			if (other.version != null)
+				return false;
+		} else if (!version.equals(other.version))
+			return false;
+		return true;
 	}
 
 }
