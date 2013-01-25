@@ -1,5 +1,6 @@
 package org.dianna.tests.factory;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.dianna.core.Protos;
@@ -7,6 +8,8 @@ import org.dianna.core.Protos.DiaBlock;
 import org.dianna.core.Protos.DiaBlockHeader;
 import org.dianna.core.Protos.DiaBlockHeader.DiaAuxData;
 import org.dianna.core.Protos.DiaBlockHeader.Builder;
+import org.dianna.core.message.Block;
+import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;
 import com.google.protobuf.ByteString;
@@ -46,5 +49,17 @@ public class BlockFactory {
 
 		auxBuilder.setParentHash(ByteString.copyFrom(new Sha256Hash(PARENT_HASH).getBytes()));
 		return auxBuilder.build();
+	}
+
+	public static Block createCorrectBlock() {
+		Block block = new Block();
+		block.setVersion(BLOCK_VERSION_CORRECT);
+		block.setNamespace(NAMESPACE);
+		block.setPrevBlockHash(new Sha256Hash(PREV_BLOCK_HASH));
+		block.setTimestamp(DateTime.now());
+		block.setPrice(new BigDecimal(PRICE));
+		block.setMerkleRootHash(new Sha256Hash(MERKLE_ROOT));
+		block.setParentBlockHash(new Sha256Hash(PARENT_HASH));
+		return block;
 	}
 }

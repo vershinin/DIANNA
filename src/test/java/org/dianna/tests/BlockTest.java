@@ -17,7 +17,7 @@ public class BlockTest {
 	@Test
 	public void shouldParseCorrectly() {
 		DiaBlock networkBlock = BlockFactory.buildCorrectDiaBlock();
-		Block block = new Block(networkBlock.toByteArray());
+		Block block = new Block();
 
 		assertEquals(block.getMerkleRootHash(), new Sha256Hash(networkBlock.getHeader().getMerkleRoot().toByteArray()));
 	}

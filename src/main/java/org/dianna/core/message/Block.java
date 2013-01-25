@@ -3,54 +3,33 @@ package org.dianna.core.message;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.dianna.core.Protos;
-import org.dianna.core.Protos.DiaBlock;
-import org.dianna.core.Protos.DiaBlockHeader;
 import org.dianna.core.Transaction;
 import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;
-import com.google.protobuf.InvalidProtocolBufferException;
 
-public class Block extends Message {
+public class Block extends Payload {
 
-	private int version;
+	// Header
+	private Integer version;
 	private Sha256Hash prevBlockHash;
 	private DateTime timestamp;
-	private int namespace;
+	private Integer namespace;
 	private BigDecimal price;
 	private Sha256Hash merkleRootHash;
 
 	private List<Transaction> transactions;
 
-	public Block(byte[] msg) {
-		super(msg);
-	}
-
-	@Override
-	protected void parse() {
-		try {
-			DiaBlock block = Protos.DiaBlock.parseFrom(msg);
-			populateHeader(block.getHeader());
-		} catch (InvalidProtocolBufferException e) {
-
-		}
-	}
-
-	private void populateHeader(DiaBlockHeader header) {
-		this.setVersion(header.getVersion());
-		this.setPrevBlockHash(new Sha256Hash(header.getPrevBlockHash().toByteArray()));
-		this.setTimestamp(new DateTime(header.getTimestamp()));
-		this.setNamespace(header.getNamespace());
-		this.setPrice(new BigDecimal(header.getPrice()));
-		this.setMerkleRootHash(new Sha256Hash(header.getMerkleRoot().toByteArray()));
-	}
+	// AUX
+	private Sha256Hash parentBlockHash;
+	private int coinbaseTxIndex;
+	private List<byte[]> auxBranch;
 
 	/*
 	 * Getters and setters
 	 */
 
-	public int getVersion() {
+	public Integer getVersion() {
 		return version;
 	}
 
@@ -108,7 +87,31 @@ public class Block extends Message {
 
 	@Override
 	public String toString() {
-		// TODO implement
+		// TODO as json format
 		return super.toString();
+	}
+
+	public Sha256Hash getParentBlockHash() {
+		return parentBlockHash;
+	}
+
+	public void setParentBlockHash(Sha256Hash parentBlockHash) {
+		this.parentBlockHash = parentBlockHash;
+	}
+
+	public int getCoinbaseTxIndex() {
+		return coinbaseTxIndex;
+	}
+
+	public void setCoinbaseTxIndex(int coinbaseTxIndex) {
+		this.coinbaseTxIndex = coinbaseTxIndex;
+	}
+
+	public List<byte[]> getAuxBranch() {
+		return auxBranch;
+	}
+
+	public void setAuxBranch(List<byte[]> auxBranch) {
+		this.auxBranch = auxBranch;
 	}
 }

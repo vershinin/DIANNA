@@ -1,12 +1,17 @@
 package org.dianna.core.message;
 
-public abstract class Message {
+public class Message {
 	public enum MessageType {
+		PING,
+		PONG,
 		TRANSACTION,
 		BLOCK
 	}
 
 	private MessageType type;
+
+	private Payload payload;
+
 	protected byte[] msg;
 
 	public Message(byte[] msg) {
@@ -14,17 +19,27 @@ public abstract class Message {
 		parse();
 	}
 
-	protected abstract void parse();
+	public Message(MessageType type) {
+		this.type = type;
+	}
+
+	protected void parse(){
+		
+	};
 
 	public MessageType getType() {
 		return type;
 	}
 
-	public void setType(MessageType type) {
-		this.type = type;
-	}
-
 	public byte[] serialize() {
 		return null;
+	}
+
+	public Payload getPayload() {
+		return payload;
+	}
+
+	public void setPayload(Payload payload) {
+		this.payload = payload;
 	}
 }
