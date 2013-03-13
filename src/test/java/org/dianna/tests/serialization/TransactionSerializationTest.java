@@ -6,7 +6,7 @@ import org.dianna.core.message.Message.MessageType;
 import org.dianna.core.message.payload.Payload;
 import org.dianna.core.message.payload.Transaction;
 import org.dianna.core.serialization.payload.TransactionSerializer;
-import org.dianna.tests.factory.TransactionFactory;
+import org.dianna.tests.factory.TestTransactionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -30,7 +30,7 @@ public class TransactionSerializationTest {
 	@Test
 	public void shouldSerializeAndDeserializeTransaction() {
 		// given
-		Transaction transaction = TransactionFactory.createValidTransaction();
+		Transaction transaction = TestTransactionFactory.createValidTransaction();
 
 		// when
 		byte[] data = transactionSerializer.serialize(transaction);

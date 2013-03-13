@@ -14,7 +14,7 @@ import org.joda.time.DateTime;
 import com.google.bitcoin.core.Sha256Hash;
 import com.google.protobuf.ByteString;
 
-public class BlockFactory {
+public class TestBlockFactory {
 	private static final int CONIBASE_INDEX = 1;
 	private static final int NAMESPACE = 1;
 	private static final String PREV_BLOCK_HASH = "155c572331fe3de390ff0bf82f1dc340d4fd621fe15e0fa4b8b84b046bc3608f";
@@ -26,6 +26,8 @@ public class BlockFactory {
 	public static DiaBlock buildCorrectDiaBlock() {
 		DiaBlock.Builder blockBuilder = Protos.DiaBlock.newBuilder();
 		blockBuilder.setHeader(buildCorrectDiaBlockHeader());
+	//	blockBuilder.addTransactions(TestTransactionFactory.createValidTransaction());
+		
 		return blockBuilder.build();
 	}
 

@@ -6,6 +6,7 @@ public class Message {
 	public enum MessageType {
 		PING,
 		PONG,
+		HANDSHAKE,
 		TRANSACTION,
 		BLOCK
 	}
@@ -25,8 +26,8 @@ public class Message {
 		this.type = type;
 	}
 
-	protected void parse(){
-		
+	protected void parse() {
+
 	};
 
 	public MessageType getType() {

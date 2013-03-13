@@ -19,7 +19,7 @@ import java.net.UnknownHostException;
  */
 public class Examples {
     public static void main(String[] args) {
-        final NetworkParameters params = NetworkParameters.prodNet();
+        final NetworkParameters params = NetworkParameters.testNet3();
         final File walletfile = new File("wallet.dat");
         Wallet wallet;
         System.out.println("Loading wallet");
@@ -46,18 +46,17 @@ public class Examples {
             System.out.println("ERROR: "+e.getMessage());
             return;
         }
-
-        final PeerGroup peerGroup=new PeerGroup(params,chain);
+      // byte[] chainHead = chain.getChainHead().getHeader().getTransactions().get(0).getInputs().get(0).getScriptBytes();
+      //  System.out.println(chainHead);
+        
+        final PeerGroup peerGroup=new PeerGroup(params,chain){
+        	
+        };
         try {
             peerGroup.addAddress(new PeerAddress(InetAddress.getLocalHost()));
         } catch (UnknownHostException e) {
             System.out.println("ERROR: "+e.getMessage());
         }
-        peerGroup.addWallet(wallet);
-        System.out.println("Starting peer");
-        peerGroup.start();
-        System.out.println("Downloading chain");
         peerGroup.downloadBlockChain();
-        System.out.println("Init complete");
     }
 }

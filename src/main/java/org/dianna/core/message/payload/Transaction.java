@@ -8,18 +8,18 @@ package org.dianna.core.message.payload;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.dianna.core.Constants;
 import org.dianna.core.Protos;
-import org.dianna.core.Protos.DiaDomainTransaction;
-import org.dianna.core.Protos.DiaDomainTransactionSimple;
-import org.dianna.core.Protos.DiaDomainTransactionSimple.Builder;
 import org.dianna.core.exception.DProtocolException;
-import org.dianna.core.message.Message;
 import org.dianna.core.utils.DiannaUtils;
+import org.json.simple.JSONValue;
 
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.Sha256Hash;
+import com.google.bitcoin.core.Utils;
+import com.google.common.collect.Maps;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -181,7 +181,7 @@ public class Transaction extends Payload {
 	public void Sign(ECKey key) {
 		// Signing double hash of serialized simplified transaction
 		byte[] payload = DiannaUtils.doubleDigest(getSimpleSerialized());
-		setSignature(key.sign(payload));
+		//setSignature(key.sign(Sha256Hash.create(payload)));
 	}
 
 	/**
@@ -238,6 +238,40 @@ public class Transaction extends Payload {
 		s += "   nextPubkey: " + DiannaUtils.bytesToHexString(getNextPubkey()) + "\n";
 		s += "   signature: " + DiannaUtils.bytesToHexString(getSignature()) + "\n";
 		return s;
+	}
+
+	public String toJson() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+
+		// NB! Order is important. Think twice before change it
+		Integer version = getVersion();
+		map.put("version", String.valueOf(version));
+
+		String fee = Utils.bytesToHexString(getFeeTransaction().getBytes());
+		map.put("transactionFee", fee);
+
+		String domain = Utils.bytesToHexString(getDomain());
+		map.put("domain", domain);
+
+		String value = Utils.bytesToHexString(getValue());
+		map.put("value", value);
+
+		String nextPubKey = Utils.bytesToHexString(getNextPubkey());
+		map.put("nextPublicKey", nextPubKey);
+
+		Sha256Hash prevTransaction = getPrevTransaction();
+		if (prevTransaction != null) {
+			String prevTrans = Utils.bytesToHexString(prevTransaction.getBytes());
+			map.put("previousTransaction", prevTrans);
+		}
+
+		byte[] signature = getSignature();
+		if (signature != null) {
+			String signatureString = Utils.bytesToHexString(signature);
+			map.put("signature", signatureString);
+		}
+
+		return JSONValue.toJSONString(map);
 	}
 
 	public Integer getVersion() {

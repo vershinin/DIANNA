@@ -14,7 +14,7 @@ import org.dianna.core.serialization.MessageSerializer;
 import org.dianna.core.serialization.impl.ContentSerializer;
 import org.dianna.core.serialization.impl.MessageSerializerImpl;
 import org.dianna.core.serialization.payload.BlockSerializer;
-import org.dianna.tests.factory.BlockFactory;
+import org.dianna.tests.factory.TestBlockFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,7 +32,7 @@ public class MessageSerializerTest {
 	@Test
 	public void shouldSerializeAndDeserializeCorrectMessage() {
 		// given
-		Block block = BlockFactory.createCorrectBlock();
+		Block block = TestBlockFactory.createCorrectBlock();
 		given(contentSerializer.serialize(eq(MessageType.BLOCK), any(Payload.class))).willReturn(new byte[0]);
 		given(contentSerializer.deserialize(eq(MessageType.BLOCK), any(byte[].class))).willReturn(block);
 

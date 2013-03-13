@@ -1,41 +1,25 @@
 package org.dianna.core.crypto;
 
-import java.text.MessageFormat;
-
 import org.dianna.core.message.payload.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.bitcoin.core.ECKey;
-import com.google.bitcoin.core.Utils;
+import com.google.bitcoin.core.ECKey.ECDSASignature;
+import com.google.bitcoin.core.Sha256Hash;
 
 public class CryptoUtil {
+	private static Logger logger = LoggerFactory.getLogger(CryptoUtil.class);
 
-	// NB! Order is important. Think twice before change it
-	private static final String SIGNATURE_PATTERN = "version:{0};fee:{1};domain:{2};value:{3};nextPubkey:{4};prevTrans:{5}";
-
-	private String createPatternForSignature(Transaction transaction) {
-		Integer version = transaction.getVersion();
-		String fee = Utils.bytesToHexString(transaction.getFeeTransaction().getBytes());
-
-		String prevTrans = null;
-		if (transaction.getPrevTransaction() != null) {
-			prevTrans = Utils.bytesToHexString(transaction.getPrevTransaction().getBytes());
-		}
-
-		String domain = Utils.bytesToHexString(transaction.getDomain());
-		String value = Utils.bytesToHexString(transaction.getValue());
-		String nextPubKey = Utils.bytesToHexString(transaction.getNextPubkey());
-
-		// NB! Order is important. Think twice before change it
-		return MessageFormat.format(SIGNATURE_PATTERN, version, fee, domain, value, nextPubKey, prevTrans);
-	}
-
-	public byte[] signTransaction(Transaction transaction, ECKey key) {
-		return key.sign(createPatternForSignature(transaction).getBytes());
+	public void signTransaction(Transaction transaction, ECKey key) {
+		transaction.setSignature(null);
+		String json = transaction.toJson();
+		ECDSASignature signature = key.sign(Sha256Hash.create(json.getBytes()));
+		transaction.setSignature(signature.encodeToDER());
 	}
 
 	public boolean verifyTransaction(Transaction transaction, byte[] publicKey) {
-		String trans = createPatternForSignature(transaction);
-		return ECKey.verify(trans.getBytes(), transaction.getSignature(), publicKey);
+		String json = transaction.toJson();
+		return ECKey.verify(json.getBytes(), transaction.getSignature(), publicKey);
 	}
-
 }

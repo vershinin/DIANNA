@@ -1,9 +1,6 @@
 package org.dianna.core.serialization;
 
-import java.util.List;
-
 import org.dianna.core.message.Message;
-import org.dianna.core.serialization.payload.PayloadSerializer;
 
 public interface MessageSerializer {
 

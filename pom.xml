@@ -11,11 +11,6 @@
 	<url>http://dianna-project.org</url>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.google</groupId>
-			<artifactId>bitcoinj</artifactId>
-			<version>0.6.1</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
@@ -74,6 +69,21 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google</groupId>
+			<artifactId>bitcoinj</artifactId>
+			<version>0.7-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.tomp2p</groupId>
+			<artifactId>TomP2P</artifactId>
+			<version>4.2</version>
 		</dependency>
 	</dependencies>
 
@@ -140,12 +150,16 @@
 			<!-- We should also configure protobuf sources generation -->
 		</plugins>
 	</build>
-	<repositories>
 
+	<repositories>
 		<repository>
-			<id>bitcoinj-release</id>
-			<releases />
-			<url>http://nexus.bitcoinj.org/content/repositories/releases</url>
+			<id>bitcoinj-snapshot</id>
+			<url>http://nexus.bitcoinj.org/content/repositories/snapshots</url>
+			<snapshots />
+		</repository>
+		<repository>
+			<id>tomp2p</id>
+			<url>http://tomp2p.net/dev/mvn/</url>
 		</repository>
 	</repositories>
 

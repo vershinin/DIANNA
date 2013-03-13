@@ -7,7 +7,7 @@ import org.dianna.core.exception.ValidationException;
 import org.dianna.core.message.Message.MessageType;
 import org.dianna.core.message.payload.Block;
 import org.dianna.core.serialization.payload.BlockSerializer;
-import org.dianna.tests.factory.BlockFactory;
+import org.dianna.tests.factory.TestBlockFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,7 +33,7 @@ public class BlockSerializerTest {
 	// Should serialize and deserialize correct block
 	public void shouldSerializeAndDeserializeCorrectBlock() throws ValidationException {
 		// given
-		Block block = BlockFactory.createCorrectBlock();
+		Block block = TestBlockFactory.createCorrectBlock();
 		// when
 		byte[] data = serializer.serialize(block);
 		block = (Block) serializer.deserialize(data);

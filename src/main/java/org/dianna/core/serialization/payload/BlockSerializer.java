@@ -23,6 +23,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 public class BlockSerializer implements PayloadSerializer {
 
+	private TransactionSerializer transactionSerializer;
+
 	@Override
 	public MessageType getType() {
 		return MessageType.BLOCK;
@@ -33,10 +35,11 @@ public class BlockSerializer implements PayloadSerializer {
 		Block block = (Block) message;
 
 		Builder builder = Protos.DiaBlock.newBuilder();
+
 		List<Transaction> transactions = block.getTransactions();
 		if (CollectionUtils.isNotEmpty(transactions)) {
 			for (Transaction transaction : transactions) {
-
+				builder.addTransactions(transactionSerializer.serialize(transaction));
 			}
 		}
 

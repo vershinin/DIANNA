@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.dianna.core.crypto.CryptoUtil;
 import org.dianna.core.message.payload.Transaction;
-import org.dianna.tests.factory.TransactionFactory;
+import org.dianna.tests.factory.TestTransactionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,12 +23,11 @@ public class CryptoUtilTest {
 	// should sign and verify tranaction signature
 	public void shouldSignAndVerifyTransaction() {
 		// given
-		Transaction t = TransactionFactory.createValidTransaction();
+		Transaction t = TestTransactionFactory.createValidTransaction();
 
 		// when
-		byte[] signature = cryptoUtil.signTransaction(t, key);
-		t.setSignature(signature);
-		
+		cryptoUtil.signTransaction(t, key);
 		assertTrue(cryptoUtil.verifyTransaction(t, key.getPubKey()));
 	}
+	//TODO add test, which controls known transaction
 }

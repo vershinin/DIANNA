@@ -1,13 +1,15 @@
 package org.dianna.tests.factory;
 
 import org.bouncycastle.util.encoders.Hex;
+import org.dianna.core.crypto.CryptoUtil;
 import org.dianna.core.message.payload.Transaction;
 
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.Sha256Hash;
 
-public class TransactionFactory {
+public class TestTransactionFactory {
 
+	
 	private static final byte[] VALUE = "Domain value".getBytes();
 	private static final String FEE_TRANSACTION = "12312321213123";
 	private static final int VERSION = 1;
