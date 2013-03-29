@@ -9,7 +9,14 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
 
-public class MessageReplay implements RawDataReply {
+
+/**
+ * This class is required to serialize/deserialize
+ * 
+ * @author ivan
+ * 
+ */
+public class DiannaRawDataReplay implements RawDataReply {
 	private static final int BUFF_SIZE = 1024;
 
 	private MessageSerializer serializer;
@@ -18,11 +25,7 @@ public class MessageReplay implements RawDataReply {
 
 	@Override
 	public ChannelBuffer reply(PeerAddress sender, ChannelBuffer requestBuffer) throws Exception {
-		byte[] buffer = new byte[BUFF_SIZE];
-		ChannelBufferInputStream is = new ChannelBufferInputStream(requestBuffer);
-		is.readFully(buffer);
-		is.close();
-		Message message = serializer.deserialize(buffer);
+		Message message = serializer.deserialize(requestBuffer.array());
 		Message responseMessage = messageHandler.handleMessage(sender, message);
 		if (responseMessage == null) {
 			return null;

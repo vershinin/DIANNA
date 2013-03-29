@@ -7,14 +7,18 @@ import net.tomp2p.peers.PeerAddress;
 import org.dianna.core.message.Handshake;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
+import org.dianna.core.message.Pong;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 
 public class MessageHandler {
+	final private static Logger logger = LoggerFactory.getLogger(MessageHandler.class);
 
 	private Map<MessageType, Handler> handlers = Maps.newHashMap();
 
-	private P2PClient client;
+	private DiannaClient client;
 
 	public MessageHandler() {
 		initHandlers();
@@ -28,6 +32,14 @@ public class MessageHandler {
 				return new Handshake();
 			}
 		});
+		handlers.put(MessageType.PING, new Handler() {
+
+			@Override
+			public Message handle(PeerAddress peer, Message message) {
+				logger.debug("Recieved ping from {}", peer.getInetAddress());
+				return new Pong();
+			}
+		});
 	}
 
 	/**
@@ -38,6 +50,10 @@ public class MessageHandler {
 	 */
 	public Message handleMessage(PeerAddress peer, Message message) {
 		Handler handler = handlers.get(message.getType());
+		if (handler == null) {
+			logger.warn("Cannot handle message. Handler not set.");
+			return null;
+		}
 		return handler.handle(peer, message);
 	}
 

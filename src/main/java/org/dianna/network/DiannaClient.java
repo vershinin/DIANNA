@@ -11,10 +11,10 @@ import org.dianna.core.message.Message;
 import org.dianna.core.serialization.MessageSerializer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
-public class P2PClient {
+public class DiannaClient {
 	private PeerMaker peerMaker;
 	private Peer peer;
-	private MessageReplay replay;
+	private DiannaRawDataReplay replay;
 	private MessageSerializer serializer;
 
 	public void connectToNetwork() throws IOException, InterruptedException {
@@ -37,7 +37,7 @@ public class P2PClient {
 		this.peerMaker = peerMaker;
 	}
 
-	public void setReplay(MessageReplay replay) {
+	public void setReplay(DiannaRawDataReplay replay) {
 		this.replay = replay;
 	}
 

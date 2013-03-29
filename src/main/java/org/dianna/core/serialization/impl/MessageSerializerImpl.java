@@ -12,7 +12,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 public class MessageSerializerImpl implements MessageSerializer {
 
-	private ContentSerializer contentSerializer;
+	private ContentSerializer contentSerializer = new ContentSerializer();
 
 	/*
 	 * (non-Javadoc)

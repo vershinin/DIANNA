@@ -10,7 +10,6 @@ import org.dianna.core.message.payload.Payload;
 import org.dianna.core.serialization.payload.PayloadSerializer;
 
 import com.google.common.collect.Maps;
-import com.google.protobuf.ByteString;
 
 public class ContentSerializer {
 	private Map<MessageType, PayloadSerializer> serializersMap = Maps.newHashMap();
@@ -32,13 +31,16 @@ public class ContentSerializer {
 	public byte[] serialize(MessageType messageType, Payload payload) {
 		PayloadSerializer serializer = serializersMap.get(messageType);
 		if (serializer == null) {
-			throw new IllegalStateException("Cannot serialize content. Not serializable!");
+			return null;
 		}
-		return null;
+		return serializer.serialize(payload);
 	}
 
 	public Payload deserialize(MessageType messageType, byte[] payloadBytes) {
 		PayloadSerializer serializer = serializersMap.get(messageType);
+		if (serializer == null) {
+			return null;
+		}
 		return serializer.deserialize(payloadBytes);
 	}
 }

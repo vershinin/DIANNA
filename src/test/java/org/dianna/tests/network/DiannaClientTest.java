@@ -9,7 +9,7 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 
 import org.dianna.core.message.Handshake;
-import org.dianna.network.P2PClient;
+import org.dianna.network.DiannaClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +18,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class P2PClientTest {
+public class DiannaClientTest {
 
 	@InjectMocks
-	private P2PClient client;
+	private DiannaClient client;
 	
 	@Mock
 	private PeerMaker peerMaker;
@@ -46,7 +46,7 @@ public class P2PClientTest {
 	@Test
 	public void shouldSendMessage() throws InterruptedException, IOException {
 		client.connectToNetwork();
-		P2PClient client2 = new P2PClient();
+		DiannaClient client2 = new DiannaClient();
 		client2.connectToNetwork();
 		client.sendMessage(new Handshake());
 	}

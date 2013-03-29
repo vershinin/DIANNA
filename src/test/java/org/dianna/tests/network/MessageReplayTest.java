@@ -6,7 +6,7 @@ import org.dianna.core.message.Handshake;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
 import org.dianna.network.MessageHandler;
-import org.dianna.network.MessageReplay;
+import org.dianna.network.DiannaRawDataReplay;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class MessageReplayTest {
 
 	@InjectMocks
-	private MessageReplay messageReplay;
+	private DiannaRawDataReplay messageReplay;
 
 	@Test
 	public void shouldHandleHandshakeMessage() {
