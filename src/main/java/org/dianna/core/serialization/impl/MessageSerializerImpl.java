@@ -2,9 +2,14 @@ package org.dianna.core.serialization.impl;
 
 import org.dianna.core.Protos.DiaMessage;
 import org.dianna.core.Protos.DiaMessage.Builder;
+import org.dianna.core.message.BlockMessage;
+import org.dianna.core.message.Handshake;
 import org.dianna.core.message.Message;
+import org.dianna.core.message.Ping;
 import org.dianna.core.message.Message.MessageType;
+import org.dianna.core.message.Pong;
 import org.dianna.core.message.payload.Payload;
+import org.dianna.core.message.payload.Transaction;
 import org.dianna.core.serialization.MessageSerializer;
 
 import com.google.protobuf.ByteString;
@@ -50,7 +55,7 @@ public class MessageSerializerImpl implements MessageSerializer {
 			return null;
 		}
 		MessageType messageType = MessageType.valueOf(message.getType().name());
-		Message m = new Message(messageType);
+		Message m = createMessage(messageType);
 
 		ByteString content = message.getContent();
 		if (content != null) {
@@ -60,6 +65,24 @@ public class MessageSerializerImpl implements MessageSerializer {
 
 		return m;
 
+	}
+
+	private Message createMessage(MessageType messageType) {
+		switch (messageType) {
+		case BLOCK:
+			return new BlockMessage();
+		case HANDSHAKE:
+			return new Handshake();
+		case PING:
+			return new Ping();
+		case PONG:
+			return new Pong();
+		case TRANSACTION:
+			//
+		default:
+			break;
+		}
+		return null;
 	}
 
 	private byte[] serializeContent(Message message) {

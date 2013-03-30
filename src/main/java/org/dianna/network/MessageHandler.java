@@ -8,6 +8,7 @@ import org.dianna.core.message.Handshake;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
 import org.dianna.core.message.Pong;
+import org.dianna.network.handler.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,12 +25,25 @@ public class MessageHandler {
 		initHandlers();
 	}
 
+	public void addHandler(Handler handler) {
+		MessageType type = handler.getType();
+		if (handlers.containsKey(type)) {
+			logger.warn("There are already exist handler for {}", type);
+		}
+		handlers.put(type, handler);
+	}
+
 	private void initHandlers() {
 		handlers.put(MessageType.HANDSHAKE, new Handler() {
 			@Override
 			public Message handle(PeerAddress peer, Message message) {
 				Handshake handshake = (Handshake) message;
 				return new Handshake();
+			}
+
+			@Override
+			public MessageType getType() {
+				return MessageType.HANDSHAKE;
 			}
 		});
 		handlers.put(MessageType.PING, new Handler() {
@@ -38,6 +52,11 @@ public class MessageHandler {
 			public Message handle(PeerAddress peer, Message message) {
 				logger.debug("Recieved ping from {}", peer.getInetAddress());
 				return new Pong();
+			}
+
+			@Override
+			public MessageType getType() {
+				return MessageType.PING;
 			}
 		});
 	}
@@ -55,10 +74,6 @@ public class MessageHandler {
 			return null;
 		}
 		return handler.handle(peer, message);
-	}
-
-	private interface Handler {
-		public Message handle(PeerAddress peer, Message message);
 	}
 
 }

@@ -22,7 +22,7 @@ public class Message {
 		parse();
 	}
 
-	public Message(MessageType type) {
+	protected Message(MessageType type) {
 		this.type = type;
 	}
 
