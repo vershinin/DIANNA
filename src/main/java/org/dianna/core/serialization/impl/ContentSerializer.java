@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.dianna.core.entity.Entity;
 import org.dianna.core.message.Message.MessageType;
-import org.dianna.core.message.payload.Payload;
 import org.dianna.core.serialization.payload.PayloadSerializer;
 
 import com.google.common.collect.Maps;
@@ -28,7 +28,7 @@ public class ContentSerializer {
 		}
 	}
 
-	public byte[] serialize(MessageType messageType, Payload payload) {
+	public byte[] serialize(MessageType messageType, Entity payload) {
 		PayloadSerializer serializer = serializersMap.get(messageType);
 		if (serializer == null) {
 			return null;
@@ -36,7 +36,7 @@ public class ContentSerializer {
 		return serializer.serialize(payload);
 	}
 
-	public Payload deserialize(MessageType messageType, byte[] payloadBytes) {
+	public Entity deserialize(MessageType messageType, byte[] payloadBytes) {
 		PayloadSerializer serializer = serializersMap.get(messageType);
 		if (serializer == null) {
 			return null;

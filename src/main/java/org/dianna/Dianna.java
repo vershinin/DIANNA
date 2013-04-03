@@ -1,29 +1,50 @@
 package org.dianna;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import org.dianna.core.message.payload.Block;
-import org.dianna.core.message.payload.Transaction;
-import org.dianna.network.DiannaClient;
-
-import com.google.common.collect.Maps;
+import org.dianna.bitcoinlite.BitcoinClient;
+import org.dianna.bitcoinlite.BitcoinClientStub;
+import org.dianna.core.serialization.impl.MessageSerializerImpl;
+import org.dianna.core.store.BlockStore;
+import org.dianna.core.validators.BlockValidator;
+import org.dianna.network.handler.BlockHandler;
+import org.dianna.network.internal.DiannaRawDataReplay;
+import org.dianna.network.internal.MessageHandler;
+import org.dianna.network.server.DiannaPeer;
 
 public class Dianna {
+	private BitcoinClient bitcoinClient;
 
-	private DiannaClient client;
-	private Map<String, String> values = Maps.newHashMap();
+	private DiannaPeer peer;
+	private DiannaSettings settings;
+	private BlockStore blockStore;
+	private BlockValidator blockValidator;
+
+	public Dianna() {
+		settings = new DiannaSettings();
+		bitcoinClient = new BitcoinClientStub();
+
+		peer = new DiannaPeer(settings);
+
+		blockValidator = new BlockValidator(bitcoinClient);
+		
+		blockStore = new BlockStore(blockValidator);
+
+		DiannaRawDataReplay replay = new DiannaRawDataReplay();
+		replay.setSerializer(new MessageSerializerImpl());
+		MessageHandler messageHandler = new MessageHandler();
+		messageHandler.addHandler(new BlockHandler(blockStore));
+
+		replay.setMessageHandler(messageHandler);
+		peer.setReplay(replay);
+	}
 
 	public void connect() throws IOException, InterruptedException {
-		client.connectToNetwork(null);
+		peer.connectToNetwork();
 	}
 
 	public String getRecord(String key) {
-		String value = values.get(key);
-		return value;
-
+		return null;
 	}
 
 }

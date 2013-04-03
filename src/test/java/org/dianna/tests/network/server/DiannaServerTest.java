@@ -10,8 +10,8 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.p2p.builder.DiscoverBuilder;
 
-import org.dianna.network.DiannaRawDataReplay;
-import org.dianna.network.server.DiannaServer;
+import org.dianna.network.internal.DiannaRawDataReplay;
+import org.dianna.network.server.DiannaPeer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DiannaServerTest {
 	@InjectMocks
-	private DiannaServer server;
+	private DiannaPeer server;
 
 	@Mock
 	private Peer peer;
@@ -42,14 +42,6 @@ public class DiannaServerTest {
 		given(peer.discover()).willReturn(discoverBuilder);
 		server.setPeerMaker(peerMaker);
 		server.setReplay(replay);
-	}
-
-	@Test
-	public void shouldStartListening() throws IOException, InterruptedException {
-		// given
-		server.start();
-		// then
-		verify(peerMaker.makeAndListen(), atLeastOnce());
 	}
 
 }

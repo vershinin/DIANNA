@@ -1,4 +1,4 @@
-package org.dianna.network;
+package org.dianna.network.internal;
 
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.RawDataReply;
@@ -6,9 +6,7 @@ import net.tomp2p.rpc.RawDataReply;
 import org.dianna.core.message.Message;
 import org.dianna.core.serialization.MessageSerializer;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
-
 
 /**
  * This class is required to serialize/deserialize

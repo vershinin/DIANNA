@@ -1,6 +1,6 @@
 package org.dianna.core.factory;
 
-import org.dianna.core.message.payload.Block;
+import org.dianna.core.entity.Block;
 
 public class BlockFactory {
 	public Block buildNewBlock(){

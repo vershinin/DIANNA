@@ -2,13 +2,13 @@ package org.dianna.network.handler;
 
 import net.tomp2p.peers.PeerAddress;
 
+import org.dianna.core.entity.Block;
+import org.dianna.core.exception.ValidationException;
 import org.dianna.core.message.BlockMessage;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
-import org.dianna.core.message.payload.Block;
-import org.dianna.core.validators.BlockValidator;
-import org.dianna.core.validators.ValidationException;
-import org.dianna.network.DiannaClient;
+import org.dianna.core.store.BlockStore;
+import org.dianna.network.server.DiannaPeer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,22 +21,22 @@ import org.slf4j.LoggerFactory;
 public class BlockHandler implements Handler {
 	private static Logger log = LoggerFactory.getLogger(BlockHandler.class);
 
-	private DiannaClient client;
-	private BlockValidator blockValidator;
+	private DiannaPeer peer;
+	private BlockStore blockStore;
 
-	public BlockHandler() {
-
+	public BlockHandler(BlockStore blockStore) {
+		this.blockStore = blockStore;
 	}
 
 	@Override
 	public Message handle(PeerAddress peer, Message message) {
 		BlockMessage block = (BlockMessage) message;
 		if (log.isDebugEnabled()) {
-			log.debug("New block recieved", block.toString());
+			log.debug("New block recieved from {} {}", peer.getInetAddress(), block.toString());
 		}
 		Block b = null;
 		try {
-			blockValidator.validateBlock(b);
+			blockStore.addBlock(b);
 		} catch (ValidationException e) {
 			log.warn("Recieved block is invalid", e);
 		}

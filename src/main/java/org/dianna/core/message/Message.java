@@ -1,6 +1,6 @@
 package org.dianna.core.message;
 
-import org.dianna.core.message.payload.Payload;
+import org.dianna.core.entity.Entity;
 
 public class Message {
 	public enum MessageType {
@@ -11,9 +11,11 @@ public class Message {
 		BLOCK
 	}
 
+	private Integer version;
+	
 	private MessageType type;
 
-	private Payload payload;
+	private Entity payload;
 
 	protected byte[] msg;
 
@@ -22,7 +24,7 @@ public class Message {
 		parse();
 	}
 
-	protected Message(MessageType type) {
+	public Message(MessageType type) {
 		this.type = type;
 	}
 
@@ -38,11 +40,19 @@ public class Message {
 		return null;
 	}
 
-	public Payload getPayload() {
+	public Entity getPayload() {
 		return payload;
 	}
 
-	public void setPayload(Payload payload) {
+	public void setPayload(Entity payload) {
 		this.payload = payload;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 }

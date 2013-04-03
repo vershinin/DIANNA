@@ -3,8 +3,8 @@ package org.dianna.tests.bitcoin;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.dianna.bitcoinlite.BitcoinClient;
-import org.dianna.bitcoinlite.BitcoinException;
+import org.dianna.bitcoinlite.impl.BitcoinClient;
+import org.dianna.bitcoinlite.impl.BitcoinException;
 import org.dianna.core.crypto.CryptoUtil;
 import org.junit.Test;
 import org.slf4j.Logger;

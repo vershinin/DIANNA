@@ -11,8 +11,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.dianna.bitcoinlite.BitcoinClient;
-import org.dianna.bitcoinlite.BitcoinException;
+import org.dianna.bitcoinlite.impl.BitcoinClient;
+import org.dianna.bitcoinlite.impl.BitcoinException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

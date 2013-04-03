@@ -1,4 +1,4 @@
-package org.dianna.core.message.payload;
+package org.dianna.core.entity;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -7,17 +7,17 @@ import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;
 
-public class Block extends Payload {
+public class Block extends Entity {
 
 	// Header
-	private Integer version;
+	private Sha256Hash hash;
 	private Sha256Hash prevBlockHash;
 	private DateTime timestamp;
 	private Integer namespace;
 	private BigDecimal price;
 	private Sha256Hash merkleRootHash;
 
-	private List<Transaction> transactions;
+	private List<DomainTransaction> transactions;
 
 	// AUX
 	private Sha256Hash parentBlockHash;
@@ -28,13 +28,6 @@ public class Block extends Payload {
 	 * Getters and setters
 	 */
 
-	public Integer getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
 
 	public Sha256Hash getPrevBlockHash() {
 		return prevBlockHash;
@@ -76,11 +69,11 @@ public class Block extends Payload {
 		this.merkleRootHash = merkleRootHash;
 	}
 
-	public List<Transaction> getTransactions() {
+	public List<DomainTransaction> getTransactions() {
 		return transactions;
 	}
 
-	public void setTransactions(List<Transaction> transactions) {
+	public void setTransactions(List<DomainTransaction> transactions) {
 		this.transactions = transactions;
 	}
 
@@ -112,5 +105,13 @@ public class Block extends Payload {
 
 	public void setAuxBranch(List<byte[]> auxBranch) {
 		this.auxBranch = auxBranch;
+	}
+
+	public Sha256Hash getHash() {
+		return hash;
+	}
+
+	public void setHash(Sha256Hash hash) {
+		this.hash = hash;
 	}
 }

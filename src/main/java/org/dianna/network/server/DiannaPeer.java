@@ -1,7 +1,6 @@
-package org.dianna.network;
+package org.dianna.network.server;
 
 import java.io.IOException;
-import java.net.InetAddress;
 
 import net.tomp2p.futures.FutureDiscover;
 import net.tomp2p.futures.FutureResponse;
@@ -11,25 +10,41 @@ import net.tomp2p.p2p.builder.DiscoverBuilder;
 import net.tomp2p.p2p.builder.SendDirectBuilder;
 import net.tomp2p.peers.PeerAddress;
 
+import org.dianna.DiannaSettings;
 import org.dianna.core.message.Message;
 import org.dianna.core.serialization.MessageSerializer;
+import org.dianna.network.internal.DiannaRawDataReplay;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
-public class DiannaClient {
-	private static final int TIMEOUT = 1000;
-	private PeerMaker peerMaker;
+public class DiannaPeer {
+
+	private DiannaSettings settings;
+
 	private Peer peer;
+	private PeerMaker peerMaker;
+
+	private DiannaRawDataReplay replay;
 	private MessageSerializer serializer;
 
-	public void connectToNetwork(InetAddress bootstrapAddress) throws IOException, InterruptedException {
+	public DiannaPeer(DiannaSettings settings) {
+		this.settings = settings;
+	}
+
+	/**
+	 * Start listening
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void connectToNetwork() throws IOException, InterruptedException {
 		if (peerMaker == null) {
 			throw new IllegalStateException("Peer maker or replay cannot be null");
 		}
-		
+
 		peer = peerMaker.makeAndListen();
 		DiscoverBuilder discoverBuilder = peer.discover();
-		discoverBuilder.setInetAddress(bootstrapAddress);
+		discoverBuilder.setInetAddress(settings.getBootstrapAddress());
 		FutureDiscover bootstrap = discoverBuilder.start();
 		bootstrap.await();
 	}
@@ -41,7 +56,7 @@ public class DiannaClient {
 		directBuilder.setPeerAddress(peerAddress);
 		directBuilder.setBuffer(ChannelBuffers.wrappedBuffer(data));
 		FutureResponse response = directBuilder.start();
-		response.await(TIMEOUT);
+		response.await(settings.getSendMessageTimeout());
 
 		ChannelBuffer buffer = response.getBuffer();
 		if (buffer == null) {
@@ -55,12 +70,28 @@ public class DiannaClient {
 		return serializer.deserialize(responseData);
 	}
 
+	public DiannaRawDataReplay getReplay() {
+		return replay;
+	}
+
+	public void setReplay(DiannaRawDataReplay replay) {
+		this.replay = replay;
+	}
+
+	public PeerMaker getPeerMaker() {
+		return peerMaker;
+	}
+
 	public void setPeerMaker(PeerMaker peerMaker) {
 		this.peerMaker = peerMaker;
 	}
 
-	public void setSerializer(MessageSerializer serializer) {
-		this.serializer = serializer;
+	public Peer getPeer() {
+		return peer;
+	}
+
+	public void setPeer(Peer peer) {
+		this.peer = peer;
 	}
 
 }

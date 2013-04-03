@@ -1,4 +1,4 @@
-package org.dianna.bitcoinlite;
+package org.dianna.bitcoinlite.impl;
 
 
 public class BitcoinException extends Exception {

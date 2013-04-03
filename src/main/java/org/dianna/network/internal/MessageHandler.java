@@ -1,13 +1,11 @@
-package org.dianna.network;
+package org.dianna.network.internal;
 
 import java.util.Map;
 
 import net.tomp2p.peers.PeerAddress;
 
-import org.dianna.core.message.Handshake;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
-import org.dianna.core.message.Pong;
 import org.dianna.network.handler.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +17,6 @@ public class MessageHandler {
 
 	private Map<MessageType, Handler> handlers = Maps.newHashMap();
 
-	private DiannaClient client;
-
-	public MessageHandler() {
-		initHandlers();
-	}
-
 	public void addHandler(Handler handler) {
 		MessageType type = handler.getType();
 		if (handlers.containsKey(type)) {
@@ -33,32 +25,8 @@ public class MessageHandler {
 		handlers.put(type, handler);
 	}
 
-	private void initHandlers() {
-		handlers.put(MessageType.HANDSHAKE, new Handler() {
-			@Override
-			public Message handle(PeerAddress peer, Message message) {
-				Handshake handshake = (Handshake) message;
-				return new Handshake();
-			}
-
-			@Override
-			public MessageType getType() {
-				return MessageType.HANDSHAKE;
-			}
-		});
-		handlers.put(MessageType.PING, new Handler() {
-
-			@Override
-			public Message handle(PeerAddress peer, Message message) {
-				logger.debug("Recieved ping from {}", peer.getInetAddress());
-				return new Pong();
-			}
-
-			@Override
-			public MessageType getType() {
-				return MessageType.PING;
-			}
-		});
+	public void removeHandler(Handler handler) {
+		handlers.remove(handler.getType());
 	}
 
 	/**
