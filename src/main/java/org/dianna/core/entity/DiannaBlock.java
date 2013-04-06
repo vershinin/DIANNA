@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;
 
-public class Block extends Entity {
+public class DiannaBlock extends Entity {
 
 	// Header
 	private Sha256Hash hash;
@@ -22,12 +22,11 @@ public class Block extends Entity {
 	// AUX
 	private Sha256Hash parentBlockHash;
 	private int coinbaseTxIndex;
-	private List<byte[]> auxBranch;
+	private List<Sha256Hash> auxBranch;
 
 	/*
 	 * Getters and setters
 	 */
-
 
 	public Sha256Hash getPrevBlockHash() {
 		return prevBlockHash;
@@ -99,11 +98,11 @@ public class Block extends Entity {
 		this.coinbaseTxIndex = coinbaseTxIndex;
 	}
 
-	public List<byte[]> getAuxBranch() {
+	public List<Sha256Hash> getAuxBranch() {
 		return auxBranch;
 	}
 
-	public void setAuxBranch(List<byte[]> auxBranch) {
+	public void setAuxBranch(List<Sha256Hash> auxBranch) {
 		this.auxBranch = auxBranch;
 	}
 

@@ -2,7 +2,7 @@ package org.dianna.network.handler;
 
 import net.tomp2p.peers.PeerAddress;
 
-import org.dianna.core.entity.Block;
+import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.exception.ValidationException;
 import org.dianna.core.message.BlockMessage;
 import org.dianna.core.message.Message;
@@ -34,7 +34,7 @@ public class BlockHandler implements Handler {
 		if (log.isDebugEnabled()) {
 			log.debug("New block recieved from {} {}", peer.getInetAddress(), block.toString());
 		}
-		Block b = null;
+		DiannaBlock b = null;
 		try {
 			blockStore.addBlock(b);
 		} catch (ValidationException e) {

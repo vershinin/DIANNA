@@ -10,7 +10,8 @@ import net.tomp2p.p2p.builder.DiscoverBuilder;
 import net.tomp2p.p2p.builder.SendDirectBuilder;
 import net.tomp2p.peers.PeerAddress;
 
-import org.dianna.DiannaSettings;
+import org.dianna.core.DiannaSettings;
+import org.dianna.core.message.BlockMessage;
 import org.dianna.core.message.Message;
 import org.dianna.core.serialization.MessageSerializer;
 import org.dianna.network.internal.DiannaRawDataReplay;
@@ -68,6 +69,10 @@ public class DiannaPeer {
 			return null;
 		}
 		return serializer.deserialize(responseData);
+	}
+
+	public void broadcast(BlockMessage blockMessage) {
+		
 	}
 
 	public DiannaRawDataReplay getReplay() {

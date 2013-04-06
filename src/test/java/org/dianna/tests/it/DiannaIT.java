@@ -2,7 +2,7 @@ package org.dianna.tests.it;
 
 import java.io.IOException;
 
-import org.dianna.Dianna;
+import org.dianna.core.Dianna;
 import org.junit.Before;
 
 public class DiannaIT {

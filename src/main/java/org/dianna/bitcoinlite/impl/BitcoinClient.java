@@ -24,9 +24,13 @@ import com.google.bitcoin.core.Message;
 import com.google.bitcoin.core.NetworkParameters;
 import com.google.bitcoin.core.Peer;
 import com.google.bitcoin.core.PeerGroup;
+import com.google.bitcoin.core.ScriptException;
 import com.google.bitcoin.core.Sha256Hash;
+import com.google.bitcoin.core.StoredBlock;
 import com.google.bitcoin.core.Transaction;
 import com.google.bitcoin.core.TransactionInput;
+import com.google.bitcoin.core.VerificationException;
+import com.google.bitcoin.core.AbstractBlockChain.NewBlockType;
 import com.google.bitcoin.discovery.IrcDiscovery;
 import com.google.bitcoin.store.BlockStore;
 import com.google.bitcoin.store.BlockStoreException;
@@ -54,7 +58,6 @@ public class BitcoinClient {
 		chain = new BlockChain(params, blockStore);
 		peerGroup = new PeerGroup(params, chain);
 		// peerGroup.addPeerDiscovery(new IrcDiscovery("#bitcoinTEST3"));
-
 		peerGroup.start();
 		try {
 			peerGroup.connectTo(new InetSocketAddress(InetAddress.getLocalHost(), params.port));
@@ -108,7 +111,7 @@ public class BitcoinClient {
 		}
 
 		return Sha256Hash.create(first.getScriptBytes()); // TODO extract using
-														// coinbase
+															// coinbase
 	}
 
 	public Future<Transaction> getTransaction(Sha256Hash id) throws BitcoinException {
