@@ -9,7 +9,7 @@ import org.dianna.core.entity.DomainTransaction;
 import org.dianna.core.exception.ValidationException;
 import org.dianna.core.factory.BlockFactory;
 import org.dianna.core.message.BlockMessage;
-import org.dianna.core.serialization.impl.MessageSerializerImpl;
+import org.dianna.core.serialization.impl.JsonMessageSerializer;
 import org.dianna.core.store.BlockStore;
 import org.dianna.core.validators.BlockValidator;
 import org.dianna.network.handler.BlockHandler;
@@ -46,7 +46,7 @@ public class Dianna {
 		blockStore = new BlockStore(blockValidator);
 
 		DiannaRawDataReplay replay = new DiannaRawDataReplay();
-		replay.setSerializer(new MessageSerializerImpl());
+		replay.setSerializer(new JsonMessageSerializer());
 		MessageHandler messageHandler = new MessageHandler();
 		messageHandler.addHandler(new BlockHandler(blockStore));
 

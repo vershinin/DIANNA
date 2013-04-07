@@ -71,11 +71,6 @@
 			<version>3.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google</groupId>
 			<artifactId>bitcoinj</artifactId>
 			<version>0.7-SNAPSHOT</version>
@@ -89,6 +84,11 @@
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
 			<version>1.30</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
 		</dependency>
 	</dependencies>
 

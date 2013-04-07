@@ -8,36 +8,22 @@ public class Message {
 		PONG,
 		HANDSHAKE,
 		TRANSACTION,
-		BLOCK
+		BLOCK,
+		ERROR
 	}
 
 	private Integer version;
-	
+
 	private MessageType type;
 
 	private Entity payload;
-
-	protected byte[] msg;
-
-	public Message(byte[] msg) {
-		this.msg = msg;
-		parse();
-	}
 
 	public Message(MessageType type) {
 		this.type = type;
 	}
 
-	protected void parse() {
-
-	};
-
 	public MessageType getType() {
 		return type;
-	}
-
-	public byte[] serialize() {
-		return null;
 	}
 
 	public Entity getPayload() {
