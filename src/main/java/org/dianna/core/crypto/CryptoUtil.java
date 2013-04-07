@@ -1,21 +1,28 @@
 package org.dianna.core.crypto;
 
+import java.io.IOException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.util.encoders.Base64;
 import org.dianna.core.entity.DomainTransaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.bitcoin.core.ECKey;
-import com.google.bitcoin.core.ECKey.ECDSASignature;
 import com.google.bitcoin.core.Sha256Hash;
+import com.google.bitcoin.core.Utils;
 
 public class CryptoUtil {
-	private static Logger logger = LoggerFactory.getLogger(CryptoUtil.class);
-
-	public void signTransaction(DomainTransaction transaction, ECKey key) {
+	/**
+	 * Sign transaction and return base64 encoded signature
+	 * 
+	 * @param transaction
+	 * @param key
+	 * @return
+	 */
+	public static String signTransaction(DomainTransaction transaction, ECKey key) {
 		transaction.setSignature(null);
-		Sha256Hash hash = createSignatureHash(transaction);
-		ECDSASignature signature = key.sign(hash);
-		transaction.setSignature(signature);
+		Sha256Hash digest = createTransactionDigest(transaction);
+		String signature = new String(Base64.encode(key.sign(digest).encodeToDER()));
+		return signature;
 	}
 
 	/**
@@ -24,19 +31,33 @@ public class CryptoUtil {
 	 * @param tx
 	 * @return
 	 */
-	private Sha256Hash createSignatureHash(DomainTransaction tx) {
-		StringBuilder string = new StringBuilder();
-		// IMORTANT! do not change order
-		string.append(tx.getDomain());
-		string.append(tx.getValue());
-		string.append(tx.getPrevTransaction());
-		string.append(tx.getFeeTransaction());
-		string.append(tx.getNextPubkey());
-		return Sha256Hash.create(string.toString().getBytes());
+	private static Sha256Hash createTransactionDigest(DomainTransaction tx) {
+		StringBuilder message = new StringBuilder();
+		// NB! do not change order
+		message.append(tx.getDomain()).append("\n");
+		message.append(tx.getValue()).append("\n");
+		message.append(tx.getPrevTransaction()).append("\n");
+		message.append(tx.getFeeTransaction()).append("\n");
+		message.append(Utils.bytesToHexString(tx.getNextPubkey().getPubKey()));
+		return new Sha256Hash(Utils.doubleDigest(message.toString().getBytes()));
 	}
 
-	public boolean verifyTransaction(DomainTransaction transaction, ECKey publicKey) {
-		Sha256Hash json = createSignatureHash(transaction);
-		return publicKey.verify(json.getBytes(), transaction.getSignature().encodeToDER());
+	public static boolean verifyTransaction(DomainTransaction transaction, ECKey key) {
+		try {
+			Sha256Hash message = createTransactionDigest(transaction);
+			String signature = transaction.getSignature();
+			if (StringUtils.isBlank(signature)) {
+				return false;
+			}
+			byte[] signatureBytes = Base64.decode(signature.getBytes());
+			return key.verify(message.getBytes(), signatureBytes);
+		} catch (RuntimeException e) {
+			// this is required due to key.verify() method wraps IOException
+			// into runtime exception
+			if (e.getCause() instanceof IOException) {
+				return false;
+			}
+			throw e;
+		}
 	}
 }

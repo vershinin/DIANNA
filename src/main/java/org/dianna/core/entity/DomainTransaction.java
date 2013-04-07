@@ -44,7 +44,7 @@ public class DomainTransaction extends Entity {
 	/**
 	 * Transaction signature
 	 */
-	private ECDSASignature signature;
+	private String signature;
 	
 
 	public Sha256Hash getFeeTransaction() {
@@ -87,11 +87,11 @@ public class DomainTransaction extends Entity {
 		this.nextPubkey = nextPubkey;
 	}
 
-	public ECDSASignature getSignature() {
+	public String getSignature() {
 		return signature;
 	}
 
-	public void setSignature(ECDSASignature signature) {
+	public void setSignature(String signature) {
 		this.signature = signature;
 	}
 
