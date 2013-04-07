@@ -34,7 +34,7 @@ public class BlockHandler implements Handler {
 		if (log.isDebugEnabled()) {
 			log.debug("New block recieved from {} {}", peer.getInetAddress(), block.toString());
 		}
-		DiannaBlock b = null;
+		DiannaBlock b = block.getBlock();
 		try {
 			blockStore.addBlock(b);
 		} catch (ValidationException e) {

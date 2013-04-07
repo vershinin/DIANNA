@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.dianna.bitcoinlite.BitcoinClient;
 import org.dianna.bitcoinlite.BitcoinClientStub;
+import org.dianna.core.entity.AuxData;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
 import org.dianna.core.exception.ValidationException;
@@ -41,6 +42,8 @@ public class Dianna {
 		bitcoinClient = new BitcoinClientStub();
 		peer = new DiannaPeer(settings);
 
+		blockFactory = new BlockFactory(settings);
+
 		blockValidator = new BlockValidator(bitcoinClient);
 
 		blockStore = new BlockStore(blockValidator);
@@ -63,19 +66,19 @@ public class Dianna {
 	}
 
 	public String getBlockHash() {
-		return null;
+		return blockFactory.getNewBlockHash().toString();
 	}
 
-	public void addTransaction(String jsonTransaction) {
-		DomainTransaction tx = new DomainTransaction();
+	public void addTransaction(DomainTransaction tx) {
 		blockFactory.addTransaction(tx);
 	}
 
-	public void broadcastBlock(String auxData) {
-		DiannaBlock block = blockFactory.buildNewBlock();
-		block.setAuxBranch(null);
-		block.setCoinbaseTxIndex(0);
-		block.setParentBlockHash(null);
+	public void broadcastBlock(AuxData auxData) {
+		DiannaBlock block = blockFactory.build();
+		block.setAuxBranch(auxData.getAuxMerkleBranch());
+		block.setCoinbaseTxIndex(auxData.getCoinbaseTxIndex());
+		block.setParentBlockHash(auxData.getParentBlockHash());
+
 		try {
 			blockValidator.validateBlock(block);
 		} catch (ValidationException e) {

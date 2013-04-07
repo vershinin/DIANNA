@@ -23,6 +23,7 @@ public class HashUtil {
 	}
 
 	public static List<Sha256Hash> buildMerkleTree(List<DomainTransaction> transactions) {
+		
 		// TODO implement merkle tree computation
 		return Lists.newArrayList();
 	}

@@ -1,5 +1,6 @@
 package org.dianna.core.factory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,12 @@ import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;
 
+/**
+ * This class holds block for building process
+ * 
+ * @author ivan
+ * 
+ */
 public class BlockFactory implements BlockStoreListener {
 	private DiannaSettings settings;
 	private BlockStore blockStore;
@@ -21,14 +28,16 @@ public class BlockFactory implements BlockStoreListener {
 
 	public BlockFactory(DiannaSettings settings) {
 		this.settings = settings;
+		newBlock = buildNewBlock();
 	}
 
-	public DiannaBlock buildNewBlock() {
+	private DiannaBlock buildNewBlock() {
 		DiannaBlock b = new DiannaBlock();
 		b.setNamespace(settings.getNamespace());
 		b.setTransactions(new ArrayList<DomainTransaction>());
 		b.setCoinbaseTxIndex(settings.getCoinbaseTxIndex());
 		b.setTimestamp(DateTime.now());
+		b.setPrice(BigDecimal.ONE);
 		return b;
 	}
 
@@ -50,9 +59,12 @@ public class BlockFactory implements BlockStoreListener {
 		newBlock.setHash(HashUtil.getHash(newBlock));
 	}
 
-	public void getNewBlockHash() {
-		// TODO Auto-generated method stub
+	public Sha256Hash getNewBlockHash() {
+		return newBlock.getHash();
+	}
 
+	public DiannaBlock build() {
+		return newBlock;
 	}
 
 }
