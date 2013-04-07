@@ -113,4 +113,5 @@ public class DiannaBlock extends Entity {
 	public void setHash(Sha256Hash hash) {
 		this.hash = hash;
 	}
+	
 }

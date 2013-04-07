@@ -1,4 +1,4 @@
-package org.dianna.tests.crypto;
+package org.dianna.tests.core.crypto;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

@@ -35,13 +35,15 @@ public class TestDataFactory {
 
 	public static DiannaBlock buildCorrectBlock() {
 		TestBlockBuilder builder = new TestBlockBuilder();
+		builder.withHash(CORRECT_BLOCK_HASH);
 		builder.withTimestamp(new DateTime(0));
 		builder.withNamespace(0);
 		builder.withPrice(BigDecimal.TEN);
 		builder.withPerviousBlockHash(PREVIOUS_HASH);
 		builder.withParentBlockHash(PARENT_HASH);
 		builder.withMerkleRootHash(MERKLE_ROOT_HASH);
-
+		builder.addTransaction(buildCorrectTransaction());
+		
 		return builder.build();
 	}
 

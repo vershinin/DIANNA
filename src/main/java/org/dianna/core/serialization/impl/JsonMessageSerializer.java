@@ -7,7 +7,10 @@ import org.dianna.core.message.Message.MessageType;
 import org.dianna.core.message.Ping;
 import org.dianna.core.message.Pong;
 import org.dianna.core.serialization.MessageSerializer;
+import org.joda.time.DateTime;
 
+import com.google.bitcoin.core.ECKey;
+import com.google.bitcoin.core.Sha256Hash;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -20,6 +23,9 @@ public class JsonMessageSerializer implements MessageSerializer {
 
 	public JsonMessageSerializer() {
 		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(ECKey.class, new EcKeySerializer());
+		builder.registerTypeAdapter(Sha256Hash.class, new Sha256Serializer());
+		builder.registerTypeAdapter(DateTime.class, new DateTimeSerialzer());
 		gson = builder.create();
 	}
 
@@ -45,7 +51,7 @@ public class JsonMessageSerializer implements MessageSerializer {
 	public Message deserialize(byte[] msg) {
 		JsonElement element = new JsonParser().parse(new String(msg));
 		JsonObject jsonObject = element.getAsJsonObject();
-		MessageType messageType = MessageType.valueOf(jsonObject.get("messageType").getAsString());
+		MessageType messageType = MessageType.valueOf(jsonObject.get("type").getAsString());
 		return createMessage(messageType, element);
 	}
 
