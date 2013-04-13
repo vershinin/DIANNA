@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.bitcoin.core.Sha256Hash;
 import com.google.common.collect.Maps;
 
+
 /**
- * Implmentation of a binary Merkle tree commitment using a generic
- * collision-resistant hash.
  * 
- * @author talm
+ * @author ivan
  * 
  */
 public class MerkleTree {
@@ -61,31 +58,12 @@ public class MerkleTree {
 		Node left;
 
 		/**
-		 * Number of leaves under the left child.
-		 */
-		int leftSubtreeSize;
-
-		/**
 		 * Pointer to right child. Leaves have null children.
 		 */
 		Node right;
 
-		/**
-		 * Number of leaves under the right child.
-		 */
-		int rightSubtreeSize;
-
 		void updateHash() {
-			Sha256Hash leftHash = left.hash;
-
-			Sha256Hash rightHash = null;
-			if (right != null) {
-				rightHash = right.hash;
-			} else {
-				rightHash = left.hash;
-			}
-
-			hash = HashUtil.createDoubleHash(leftHash, rightHash);
+			hash = HashUtil.createDoubleHash(left.hash, right.hash);
 		}
 
 		@Override
@@ -105,31 +83,45 @@ public class MerkleTree {
 		return root.hash;
 	}
 
+	/**
+	 * Build merkle tree using given hashes
+	 * 
+	 * @param hashes
+	 */
 	public void buildTree(List<Sha256Hash> hashes) {
 		List<Node> leaves = new ArrayList<MerkleTree.Node>(hashes.size());
 		for (Sha256Hash sha256Hash : hashes) {
 			Node n = new Node();
 			n.hash = sha256Hash;
 			leaves.add(n);
-			leafToNode.put(sha256Hash, n);
 		}
 
 		List<Node> parents = leaves;
-		do {
+
+		while (parents.size() != 1) {
+			updateNodeMap(parents);
 			parents = createParents(parents);
-		} while (parents.size() != 1);
+			depth++;
+		}
 
 		root = parents.get(0);
 
 	}
 
+	private void updateNodeMap(List<Node> parents) {
+		for (Node node : parents) {
+			leafToNode.put(node.hash, node);
+		}
+	}
+
 	private List<Node> createParents(List<Node> children) {
 		int childrenCount = children.size();
+
+		// If children count is not even, we should add dublicating nodes
 		if (childrenCount % 2 != 0) {
 			Node n = new Node();
 			n.hash = children.get(childrenCount - 1).hash;
 			children.add(n);
-			leafToNode.put(n.hash, n);
 		}
 
 		List<Node> parents = new ArrayList<MerkleTree.Node>(childrenCount / 2);
@@ -143,7 +135,6 @@ public class MerkleTree {
 
 			parent.updateHash();
 			parents.add(parent);
-			leafToNode.put(parent.hash, parent);
 		}
 		return parents;
 	}
