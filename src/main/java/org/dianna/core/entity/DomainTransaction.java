@@ -99,9 +99,6 @@ public class DomainTransaction extends Entity {
 	}
 
 	public Sha256Hash getHash() {
-		if (hash == null) {
-			hash = HashUtil.getHash(this);
-		}
 		return hash;
 	}
 

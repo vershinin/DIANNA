@@ -28,7 +28,7 @@ public class MessageSerializerTest {
 		BlockMessage deserialized = (BlockMessage) serializer.deserialize(serialized);
 		
 		// then
-		assertEquals(HashUtil.getHash(deserialized.getBlock()), HashUtil.getHash(block));
+		assertEquals(HashUtil.calculateHash(deserialized.getBlock()), HashUtil.calculateHash(block));
 	}
 	
 }

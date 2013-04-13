@@ -25,6 +25,7 @@ public class TransactionBuilder extends JPanel {
 	private JTextField txtBlockHash;
 	private JTextField txtBitcoinHash;
 
+	
 	private Dianna dianna;
 	private ECKey key = new ECKey();
 
@@ -106,7 +107,6 @@ public class TransactionBuilder extends JPanel {
 				dianna.addTransaction(t);
 				txtBlockHash.setText(dianna.getBlockHash());
 
-				dianna.addTransaction(t);
 			}
 		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();

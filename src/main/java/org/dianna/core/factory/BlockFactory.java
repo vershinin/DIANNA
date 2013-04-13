@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dianna.core.Dianna;
 import org.dianna.core.DiannaSettings;
 import org.dianna.core.crypto.HashUtil;
 import org.dianna.core.crypto.MerkleTree;
@@ -12,7 +13,10 @@ import org.dianna.core.entity.DomainTransaction;
 import org.dianna.core.store.BlockStore;
 import org.dianna.core.store.BlockStore.BlockStoreListener;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.beust.jcommander.internal.Lists;
 import com.google.bitcoin.core.Sha256Hash;
 
 /**
@@ -22,6 +26,8 @@ import com.google.bitcoin.core.Sha256Hash;
  * 
  */
 public class BlockFactory implements BlockStoreListener {
+	private static Logger logger = LoggerFactory.getLogger(Dianna.class);
+
 	private DiannaSettings settings;
 	private BlockStore blockStore;
 
@@ -47,11 +53,16 @@ public class BlockFactory implements BlockStoreListener {
 		transactions.add(domainTransaction);
 
 		MerkleTree merkleTree = new MerkleTree();
+		List<Sha256Hash> hashList = Lists.newArrayList(transactions.size());
 		for (DomainTransaction tx : transactions) {
-			merkleTree.addLeaf(tx.getHash());
+			hashList.add(HashUtil.calculateHash(tx));
 		}
+		merkleTree.buildTree(hashList);
 
 		newBlock.setMerkleRootHash(merkleTree.getRoot());
+		newBlock.setHash(HashUtil.calculateHash(newBlock));
+
+		logger.info("New transaction added. Recalculated hash is {}", newBlock.getHash());
 	}
 
 	public synchronized void setAuxData(Sha256Hash parentHash, List<Sha256Hash> auxBranch) {
@@ -61,7 +72,8 @@ public class BlockFactory implements BlockStoreListener {
 	@Override
 	public void onCorrectBlockRecieved(DiannaBlock block) {
 		newBlock.setPrevBlockHash(block.getHash());
-		newBlock.setHash(HashUtil.getHash(newBlock));
+		newBlock.setHash(HashUtil.calculateHash(newBlock));
+		logger.info("New block {} recieved. Recalculated hash is {}", block.getHash(), newBlock.getHash());
 	}
 
 	public Sha256Hash getNewBlockHash() {

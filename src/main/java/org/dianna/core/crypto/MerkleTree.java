@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -84,7 +85,12 @@ public class MerkleTree {
 				rightHash = left.hash;
 			}
 
-			hash = Sha256Hash.createDouble(ArrayUtils.addAll(leftHash.getBytes(), rightHash.getBytes()));
+			hash = HashUtil.createDoubleHash(leftHash, rightHash);
+		}
+
+		@Override
+		public String toString() {
+			return hash.toString();
 		}
 
 	}
@@ -99,83 +105,47 @@ public class MerkleTree {
 		return root.hash;
 	}
 
-	/**
-	 * Add a leaf to the tree.
-	 * 
-	 * @param leafvalue
-	 * @return true if the leaf was added, false if it was already in the tree.
-	 */
-	public boolean addLeaf(Sha256Hash leafvalue) {
-		if (leafToNode.containsKey(leafvalue))
-			return false;
-
-		Node curNode = root;
-
-		Node leafNode = new Node();
-		leafNode.hash = leafvalue;
-		leafToNode.put(leafvalue, leafNode);
-
-		if (root.left == null) {
-			assert root.right == null;
-			root.left = leafNode;
-			leafNode.parent = root;
-			root.leftSubtreeSize = 1;
-			root.updateHash();
-			depth = 1;
-		} else if (root.right == null) {
-			root.right = leafNode;
-			leafNode.parent = root;
-			root.rightSubtreeSize = 1;
-			root.updateHash();
-		} else {
-			/*
-			 * Repeatedly choose the child with the smallest subtree until we
-			 * reach a leaf.
-			 */
-			int curdepth = 0;
-			while (curNode.leftSubtreeSize > 0) {
-				if (curNode.leftSubtreeSize > curNode.rightSubtreeSize)
-					curNode = curNode.right;
-				else
-					curNode = curNode.left;
-				++curdepth;
-			}
-
-			assert curdepth <= depth;
-
-			// We've reached a leaf.
-			assert curNode.rightSubtreeSize == 0;
-
-			// Create a new internal node, and insert it in place of curNode.
-			// curNode will become the new left node, and the new leaf will
-			// become
-			// its new right node.
-			Node newInternal = new Node();
-			newInternal.leftSubtreeSize = newInternal.rightSubtreeSize = 1;
-			newInternal.parent = curNode.parent;
-			if (curNode.parent.left == curNode) {
-				curNode.parent.left = newInternal;
-			} else {
-				assert curNode.parent.right == curNode;
-				curNode.parent.right = newInternal;
-			}
-			newInternal.left = curNode;
-			newInternal.right = leafNode;
-			leafNode.parent = curNode.parent = newInternal;
-			newInternal.updateHash();
-
-			if (curdepth == depth)
-				++depth;
-
-			// Update the subtree counts and hashes on the path to the root.
-			for (curNode = newInternal.parent; curNode != null; curNode = curNode.parent) {
-				curNode.leftSubtreeSize = curNode.left.leftSubtreeSize + curNode.left.rightSubtreeSize;
-				curNode.rightSubtreeSize = curNode.right.leftSubtreeSize + curNode.right.rightSubtreeSize;
-				curNode.updateHash();
-			}
+	public void buildTree(List<Sha256Hash> hashes) {
+		List<Node> leaves = new ArrayList<MerkleTree.Node>(hashes.size());
+		for (Sha256Hash sha256Hash : hashes) {
+			Node n = new Node();
+			n.hash = sha256Hash;
+			leaves.add(n);
+			leafToNode.put(sha256Hash, n);
 		}
 
-		return true;
+		List<Node> parents = leaves;
+		do {
+			parents = createParents(parents);
+		} while (parents.size() != 1);
+
+		root = parents.get(0);
+
+	}
+
+	private List<Node> createParents(List<Node> children) {
+		int childrenCount = children.size();
+		if (childrenCount % 2 != 0) {
+			Node n = new Node();
+			n.hash = children.get(childrenCount - 1).hash;
+			children.add(n);
+			leafToNode.put(n.hash, n);
+		}
+
+		List<Node> parents = new ArrayList<MerkleTree.Node>(childrenCount / 2);
+		for (int i = 0; i < childrenCount; i += 2) {
+			Node parent = new Node();
+
+			parent.left = children.get(i);
+			parent.right = children.get(i + 1);
+			parent.left.parent = parent;
+			parent.right.parent = parent;
+
+			parent.updateHash();
+			parents.add(parent);
+			leafToNode.put(parent.hash, parent);
+		}
+		return parents;
 	}
 
 	public List<Pair<Sha256Hash, Sha256Hash>> getPath(Sha256Hash leaf) {
@@ -211,5 +181,4 @@ public class MerkleTree {
 		// All the tests passed.
 		return true;
 	}
-
 }

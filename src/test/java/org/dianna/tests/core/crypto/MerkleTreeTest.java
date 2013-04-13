@@ -1,7 +1,6 @@
 package org.dianna.tests.core.crypto;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -12,65 +11,83 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.beust.jcommander.internal.Lists;
 import com.google.bitcoin.core.Sha256Hash;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MerkleTreeTest {
 
-	private static final String KNOWN_MERKLE_ROOT = "6a7109a7fb78b2914ea7f3c1db40cea169ad375383ee3f9d6bb853dd2813de2f";
+	private static final Sha256Hash ROOT = new Sha256Hash(
+			"25207db7f8027354fe997d6282342ce3a3f79896d1748285b43a0203c3493b68");
+
+	Sha256Hash hash1 = new Sha256Hash("1000000000000000000000000000000000000000000000000000000000000000");
+	Sha256Hash hash2 = new Sha256Hash("2000000000000000000000000000000000000000000000000000000000000000");
+	Sha256Hash hash3 = new Sha256Hash("3000000000000000000000000000000000000000000000000000000000000000");
+	Sha256Hash hash4 = new Sha256Hash("4000000000000000000000000000000000000000000000000000000000000000");
+	Sha256Hash hash5 = new Sha256Hash("5000000000000000000000000000000000000000000000000000000000000000");
+	public List<Sha256Hash> hashList = Lists.newArrayList(hash1, hash2, hash3, hash4, hash5);
 
 	@Test
 	public void shouldUpdateRoot() {
-		MerkleTree tree = new MerkleTree();
-		tree.addLeaf(Sha256Hash.createDouble("test".getBytes()));
-		Sha256Hash firstMerkleRoot = tree.getRoot();
-
-		tree.addLeaf(Sha256Hash.createDouble("test3".getBytes()));
-		Sha256Hash secondMerkleRoot = tree.getRoot();
-		assertNotEquals(firstMerkleRoot, secondMerkleRoot);
+		// MerkleTree tree = new MerkleTree();
+		// tree.addLeaf(Sha256Hash.createDouble("test".getBytes()));
+		// Sha256Hash firstMerkleRoot = tree.getRoot();
+		//
+		// tree.addLeaf(Sha256Hash.createDouble("test3".getBytes()));
+		// Sha256Hash secondMerkleRoot = tree.getRoot();
+		// assertNotEquals(firstMerkleRoot, secondMerkleRoot);
 	}
 
 	@Test
 	public void shouldGiveKnownMerkleRoot() {
+		// given
 		MerkleTree tree = new MerkleTree();
-		tree.addLeaf(Sha256Hash.createDouble("dianna".getBytes()));
-		tree.addLeaf(Sha256Hash.createDouble("bitcoin".getBytes()));
+		tree.buildTree(hashList);
+
+		// when
 		Sha256Hash root = tree.getRoot();
-		assertEquals(new Sha256Hash(KNOWN_MERKLE_ROOT), root);
+
+		// then
+		assertEquals(ROOT, root);
 	}
 
 	@Test
 	public void shouldGiveCorrectPath() {
+		// given
 		MerkleTree tree = new MerkleTree();
-		for (int i = 0; i < 64; i++) {
-			tree.addLeaf(Sha256Hash.create(("test" + i).getBytes()));
-		}
+		tree.buildTree(hashList);
 
-		Sha256Hash leaf = Sha256Hash.createDouble("test".getBytes());
-		System.out.println("Looking for " + leaf);
-		tree.addLeaf(leaf);
+		// when
+		List<Pair<Sha256Hash, Sha256Hash>> path = tree.getPath(hash1);
 
-		List<Pair<Sha256Hash, Sha256Hash>> path = tree.getPath(leaf);
-		for (Pair<Sha256Hash, Sha256Hash> pair : path) {
-			System.out.println(pair.getLeft() + ":" + pair.getRight());
-		}
-		System.out.println("root:" + tree.getRoot());
-		// assertNotEquals(firstMerkleRoot, secondMerkleRoot);
+		// then
+		Pair<Sha256Hash, Sha256Hash> pair = path.get(0);
+		assertTrue(pair.getLeft() == hash1 && pair.getRight() == hash2);
+
+		pair = path.get(1);
+		assertEquals(new Sha256Hash("73512760f320a3af88914a637c51395034745ad02a31305a9a198fe975a1a3a1"), pair.getLeft());
+		assertEquals(new Sha256Hash("36ce40300ba3b2ed39f30c31e5e008dafd198c81d221053aaa7c3425108be534"),
+				pair.getRight());
+
+		pair = path.get(2);
+		assertEquals(new Sha256Hash("60fa468d43dedaa9c1022b1bf83cddfece4f83f4afca461e3829efa7e0c0d774"), pair.getLeft());
+		assertEquals(new Sha256Hash("d04ff478901282f12a070d15bcee3cd0f1a7cb7ea35cb2a2cbd59a71e354ee18"),
+				pair.getRight());
+
+		assertEquals(new Sha256Hash("25207db7f8027354fe997d6282342ce3a3f79896d1748285b43a0203c3493b68"), tree.getRoot());
+
 	}
+
 	@Test
 	public void shouldValidateGivenPath() {
-		//given
+		// given
 		MerkleTree tree = new MerkleTree();
-		for (int i = 0; i < 64; i++) {
-			tree.addLeaf(Sha256Hash.create(("test" + i).getBytes()));
-		}
+		tree.buildTree(hashList);
 
-		Sha256Hash leaf = Sha256Hash.createDouble("test".getBytes());
-		tree.addLeaf(leaf);
-		
-		List<Pair<Sha256Hash, Sha256Hash>> path = tree.getPath(leaf);
-		
-		//then
-		assertTrue("Path should be valid",MerkleTree.verifyPath(leaf, tree.getRoot(), path));
+		// when
+		List<Pair<Sha256Hash, Sha256Hash>> path = tree.getPath(hash4);
+
+		// then
+		assertTrue("Path should be valid", MerkleTree.verifyPath(hash4, tree.getRoot(), path));
 	}
 }

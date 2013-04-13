@@ -26,7 +26,7 @@ public class HashUtilTest {
 		DiannaBlock block = TestDataFactory.buildCorrectBlock();
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(block);
+		Sha256Hash hash = HashUtil.calculateHash(block);
 
 		// then
 		assertEquals(TestDataFactory.CORRECT_BLOCK_HASH, hash);
@@ -39,7 +39,7 @@ public class HashUtilTest {
 		block.setTimestamp(DateTime.now());
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(block);
+		Sha256Hash hash = HashUtil.calculateHash(block);
 
 		// then
 		assertNotEquals("Hash should change", TestDataFactory.CORRECT_BLOCK_HASH, hash);
@@ -52,7 +52,7 @@ public class HashUtilTest {
 		block.setNamespace(2);
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(block);
+		Sha256Hash hash = HashUtil.calculateHash(block);
 
 		// then
 		assertNotEquals("Hash should change", TestDataFactory.CORRECT_BLOCK_HASH, hash);
@@ -65,7 +65,7 @@ public class HashUtilTest {
 		block.setPrice(BigDecimal.ZERO);
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(block);
+		Sha256Hash hash = HashUtil.calculateHash(block);
 
 		// then
 		assertNotEquals("Hash should change", TestDataFactory.CORRECT_BLOCK_HASH, hash);
@@ -78,7 +78,7 @@ public class HashUtilTest {
 		block.setPrevBlockHash(Sha256Hash.ZERO_HASH);
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(block);
+		Sha256Hash hash = HashUtil.calculateHash(block);
 
 		// then
 		assertNotEquals("Hash should change", TestDataFactory.CORRECT_BLOCK_HASH, hash);
@@ -91,7 +91,7 @@ public class HashUtilTest {
 		block.setMerkleRootHash(Sha256Hash.ZERO_HASH);
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(block);
+		Sha256Hash hash = HashUtil.calculateHash(block);
 
 		// then
 		assertNotEquals("Hash should change", TestDataFactory.CORRECT_BLOCK_HASH, hash);
@@ -105,7 +105,7 @@ public class HashUtilTest {
 		DomainTransaction tx = TestDataFactory.buildCorrectTransaction();
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(tx);
+		Sha256Hash hash = HashUtil.calculateHash(tx);
 
 		// then
 		assertEquals(TestDataFactory.CORRECT_TRANSACTION_HASH, hash);
@@ -118,7 +118,7 @@ public class HashUtilTest {
 		tx.setDomain("other domain");
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(tx);
+		Sha256Hash hash = HashUtil.calculateHash(tx);
 
 		// then
 		assertNotEquals("Hash should change", hash, TestDataFactory.CORRECT_TRANSACTION_HASH);
@@ -131,7 +131,7 @@ public class HashUtilTest {
 		tx.setValue("new value");
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(tx);
+		Sha256Hash hash = HashUtil.calculateHash(tx);
 
 		// then
 		assertNotEquals("Hash should change", hash, TestDataFactory.CORRECT_TRANSACTION_HASH);
@@ -144,7 +144,7 @@ public class HashUtilTest {
 		tx.setPrevTransaction(Sha256Hash.ZERO_HASH);
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(tx);
+		Sha256Hash hash = HashUtil.calculateHash(tx);
 
 		// then
 		assertNotEquals("Hash should change", hash, TestDataFactory.CORRECT_TRANSACTION_HASH);
@@ -157,7 +157,7 @@ public class HashUtilTest {
 		tx.setFeeTransaction(Sha256Hash.ZERO_HASH);
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(tx);
+		Sha256Hash hash = HashUtil.calculateHash(tx);
 
 		// then
 		assertNotEquals("Hash should change", hash, TestDataFactory.CORRECT_TRANSACTION_HASH);
@@ -170,7 +170,7 @@ public class HashUtilTest {
 		tx.setNextPubkey(new ECKey());
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(tx);
+		Sha256Hash hash = HashUtil.calculateHash(tx);
 
 		// then
 		assertNotEquals("Hash should change", hash, TestDataFactory.CORRECT_TRANSACTION_HASH);
@@ -183,7 +183,7 @@ public class HashUtilTest {
 		tx.setSignature("other fake signature");
 
 		// when
-		Sha256Hash hash = HashUtil.getHash(tx);
+		Sha256Hash hash = HashUtil.calculateHash(tx);
 
 		// then
 		assertNotEquals("Hash should change", hash, TestDataFactory.CORRECT_TRANSACTION_HASH);

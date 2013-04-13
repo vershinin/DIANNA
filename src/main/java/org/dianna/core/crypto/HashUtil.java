@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 
 public class HashUtil {
 
-	public static Sha256Hash getHash(DomainTransaction tx) {
+	public static Sha256Hash calculateHash(DomainTransaction tx) {
 		StringBuilder string = new StringBuilder();
 		string.append(tx.getPrevTransaction()).append("\n");
 		string.append(tx.getDomain()).append("\n");
@@ -29,7 +29,7 @@ public class HashUtil {
 		return Lists.newArrayList();
 	}
 
-	public static Sha256Hash getHash(DiannaBlock block) {
+	public static Sha256Hash calculateHash(DiannaBlock block) {
 		StringBuilder string = new StringBuilder();
 		string.append(block.getPrevBlockHash());
 		string.append(block.getTimestamp().getMillis()).append("\n");
