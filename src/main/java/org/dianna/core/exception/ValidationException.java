@@ -7,4 +7,8 @@ public class ValidationException extends Exception {
 		super(string);
 	}
 
+	public ValidationException(Exception e) {
+		super(e);
+	}
+
 }

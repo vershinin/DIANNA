@@ -1,5 +1,6 @@
 package org.dianna.core.crypto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -7,7 +8,6 @@ import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
 
 import com.google.bitcoin.core.Sha256Hash;
-import com.google.common.collect.Lists;
 
 public class HashUtil {
 
@@ -23,10 +23,14 @@ public class HashUtil {
 		return Sha256Hash.createDouble(string.toString().getBytes());
 	}
 
-	public static List<Sha256Hash> buildMerkleTree(List<DomainTransaction> transactions) {
-		
-		// TODO implement merkle tree computation
-		return Lists.newArrayList();
+	public static MerkleTree buildMerkleTree(List<DomainTransaction> transactions) {
+		MerkleTree merkleTree = new MerkleTree();
+		List<Sha256Hash> hashList = new ArrayList<Sha256Hash>(transactions.size());
+		for (DomainTransaction tx : transactions) {
+			hashList.add(HashUtil.calculateHash(tx));
+		}
+		merkleTree.buildTree(hashList);
+		return merkleTree;
 	}
 
 	public static Sha256Hash calculateHash(DiannaBlock block) {
@@ -39,8 +43,8 @@ public class HashUtil {
 
 		return Sha256Hash.createDouble(string.toString().getBytes());
 	}
-	
-	public static Sha256Hash createDoubleHash(Sha256Hash leftHash, Sha256Hash rightHash){
+
+	public static Sha256Hash createDoubleHash(Sha256Hash leftHash, Sha256Hash rightHash) {
 		return Sha256Hash.createDouble(ArrayUtils.addAll(leftHash.getBytes(), rightHash.getBytes()));
 	}
 }

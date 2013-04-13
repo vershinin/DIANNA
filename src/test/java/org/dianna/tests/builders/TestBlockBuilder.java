@@ -3,6 +3,7 @@ package org.dianna.tests.builders;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
 import org.joda.time.DateTime;
@@ -19,7 +20,7 @@ public class TestBlockBuilder {
 	private void createBlock() {
 		block = new DiannaBlock();
 		block.setTransactions(new ArrayList<DomainTransaction>(5));
-		block.setAuxBranch(new ArrayList<Sha256Hash>(5));
+		block.setAuxBranch(new ArrayList<Pair<Sha256Hash, Sha256Hash>>(5));
 	}
 
 	public TestBlockBuilder withHash(Sha256Hash hash) {
@@ -62,8 +63,8 @@ public class TestBlockBuilder {
 		return this;
 	}
 
-	public TestBlockBuilder addAuxBranch(Sha256Hash hash) {
-		block.getAuxBranch().add(hash);
+	public TestBlockBuilder addAuxBranch(Pair<Sha256Hash, Sha256Hash> hashPair) {
+		block.getAuxBranch().add(hashPair);
 		return this;
 	}
 

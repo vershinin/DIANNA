@@ -7,7 +7,6 @@ import java.util.List;
 import org.dianna.core.Dianna;
 import org.dianna.core.DiannaSettings;
 import org.dianna.core.crypto.HashUtil;
-import org.dianna.core.crypto.MerkleTree;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
 import org.dianna.core.store.BlockStore;
@@ -16,7 +15,6 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.beust.jcommander.internal.Lists;
 import com.google.bitcoin.core.Sha256Hash;
 
 /**
@@ -51,22 +49,15 @@ public class BlockFactory implements BlockStoreListener {
 	public synchronized void addTransaction(DomainTransaction domainTransaction) {
 		List<DomainTransaction> transactions = newBlock.getTransactions();
 		transactions.add(domainTransaction);
+		newBlock.setMerkleRootHash(HashUtil.buildMerkleTree(transactions).getRoot());
 
-		MerkleTree merkleTree = new MerkleTree();
-		List<Sha256Hash> hashList = Lists.newArrayList(transactions.size());
-		for (DomainTransaction tx : transactions) {
-			hashList.add(HashUtil.calculateHash(tx));
-		}
-		merkleTree.buildTree(hashList);
-
-		newBlock.setMerkleRootHash(merkleTree.getRoot());
 		newBlock.setHash(HashUtil.calculateHash(newBlock));
 
 		logger.info("New transaction added. Recalculated hash is {}", newBlock.getHash());
 	}
 
 	public synchronized void setAuxData(Sha256Hash parentHash, List<Sha256Hash> auxBranch) {
-		newBlock.setAuxBranch(auxBranch);
+		//newBlock.setAuxBranch(auxBranch);
 	}
 
 	@Override

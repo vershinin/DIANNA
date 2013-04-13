@@ -3,7 +3,7 @@ package org.dianna.core.entity;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.dianna.core.crypto.HashUtil;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;
@@ -23,7 +23,7 @@ public class DiannaBlock extends Entity {
 	// AUX
 	private Sha256Hash parentBlockHash;
 	private int coinbaseTxIndex;
-	private List<Sha256Hash> auxBranch;
+	private List<Pair<Sha256Hash, Sha256Hash>> auxBranch;
 
 	/*
 	 * Getters and setters
@@ -99,11 +99,11 @@ public class DiannaBlock extends Entity {
 		this.coinbaseTxIndex = coinbaseTxIndex;
 	}
 
-	public List<Sha256Hash> getAuxBranch() {
+	public List<Pair<Sha256Hash, Sha256Hash>> getAuxBranch() {
 		return auxBranch;
 	}
 
-	public void setAuxBranch(List<Sha256Hash> auxBranch) {
+	public void setAuxBranch(List<Pair<Sha256Hash, Sha256Hash>> auxBranch) {
 		this.auxBranch = auxBranch;
 	}
 

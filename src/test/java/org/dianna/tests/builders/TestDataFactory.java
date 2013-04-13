@@ -2,6 +2,8 @@ package org.dianna.tests.builders;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.dianna.core.crypto.HashUtil;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
 import org.joda.time.DateTime;
@@ -18,7 +20,7 @@ public class TestDataFactory {
 			"32181d0a7b5ea8ce70662dff058ca918e45670c4197b33f3eaf695a4cadf427a");
 
 	public static final Sha256Hash MERKLE_ROOT_HASH = new Sha256Hash(
-			"2f279cc3c9c49c4394f942134e9292f1dc44d7344a3bcb9555dc49c29a8b0a34");
+			"58dfcc7d357c8429bd317dfa3f7809a12e30eeabc257521e2d06807f7790adde");
 
 	public static final Sha256Hash CORRECT_BLOCK_HASH = new Sha256Hash(
 			"8288393494a63fd9d15aa952ff05c1ff8b94fab06596caa540e006805c5db0ae");
@@ -40,10 +42,18 @@ public class TestDataFactory {
 		builder.withNamespace(0);
 		builder.withPrice(BigDecimal.TEN);
 		builder.withPerviousBlockHash(PREVIOUS_HASH);
-		builder.withParentBlockHash(PARENT_HASH);
-		builder.withMerkleRootHash(MERKLE_ROOT_HASH);
+
 		builder.addTransaction(buildCorrectTransaction());
-		
+		builder.addTransaction(buildCorrectTransaction());
+		builder.withMerkleRootHash(MERKLE_ROOT_HASH);
+
+		builder.addAuxBranch(Pair.of(CORRECT_BLOCK_HASH, Sha256Hash.ZERO_HASH));
+		builder.addAuxBranch(Pair.of(
+				new Sha256Hash("1dc40bb8d5a3435fc5cf7be5e93a18d648a47f5fbbae958f56452e96d4a37e29"),
+				Sha256Hash.ZERO_HASH));
+
+		builder.withParentBlockHash(PARENT_HASH);
+
 		return builder.build();
 	}
 

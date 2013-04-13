@@ -75,7 +75,7 @@ public class Dianna {
 
 	public void broadcastBlock(AuxData auxData) {
 		DiannaBlock block = blockFactory.build();
-		block.setAuxBranch(auxData.getAuxMerkleBranch());
+	//	block.setAuxBranch(auxData.getAuxMerkleBranch());
 		block.setCoinbaseTxIndex(auxData.getCoinbaseTxIndex());
 		block.setParentBlockHash(auxData.getParentBlockHash());
 

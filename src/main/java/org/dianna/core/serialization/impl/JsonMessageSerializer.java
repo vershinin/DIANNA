@@ -1,5 +1,6 @@
 package org.dianna.core.serialization.impl;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.dianna.core.message.BlockMessage;
 import org.dianna.core.message.Handshake;
 import org.dianna.core.message.Message;
@@ -26,6 +27,7 @@ public class JsonMessageSerializer implements MessageSerializer {
 		builder.registerTypeAdapter(ECKey.class, new EcKeySerializer());
 		builder.registerTypeAdapter(Sha256Hash.class, new Sha256Serializer());
 		builder.registerTypeAdapter(DateTime.class, new DateTimeSerialzer());
+		builder.registerTypeAdapter(Pair.class, new PairSerializer());
 		gson = builder.create();
 	}
 
