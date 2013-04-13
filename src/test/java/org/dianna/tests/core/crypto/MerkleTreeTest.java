@@ -1,6 +1,8 @@
 package org.dianna.tests.core.crypto;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -28,17 +30,6 @@ public class MerkleTreeTest {
 	public List<Sha256Hash> hashList = Lists.newArrayList(hash1, hash2, hash3, hash4, hash5);
 
 	@Test
-	public void shouldUpdateRoot() {
-		// MerkleTree tree = new MerkleTree();
-		// tree.addLeaf(Sha256Hash.createDouble("test".getBytes()));
-		// Sha256Hash firstMerkleRoot = tree.getRoot();
-		//
-		// tree.addLeaf(Sha256Hash.createDouble("test3".getBytes()));
-		// Sha256Hash secondMerkleRoot = tree.getRoot();
-		// assertNotEquals(firstMerkleRoot, secondMerkleRoot);
-	}
-
-	@Test
 	public void shouldGiveKnownMerkleRoot() {
 		// given
 		MerkleTree tree = new MerkleTree();
@@ -49,6 +40,21 @@ public class MerkleTreeTest {
 
 		// then
 		assertEquals(ROOT, root);
+	}
+
+	@Test
+	public void shouldUpdateRoot() {
+		// given
+		MerkleTree tree = new MerkleTree();
+		List<Sha256Hash> newHashList = Lists.newArrayList(hashList);
+		newHashList.add(Sha256Hash.ZERO_HASH);
+		tree.buildTree(newHashList);
+
+		// when
+		Sha256Hash root = tree.getRoot();
+
+		// then
+		assertNotEquals(ROOT, root);
 	}
 
 	@Test
@@ -89,5 +95,32 @@ public class MerkleTreeTest {
 
 		// then
 		assertTrue("Path should be valid", MerkleTree.verifyPath(hash4, tree.getRoot(), path));
+	}
+
+	@Test
+	public void shouldFailValidationIfPathChanged() {
+		// given
+		MerkleTree tree = new MerkleTree();
+		tree.buildTree(hashList);
+
+		// when
+		List<Pair<Sha256Hash, Sha256Hash>> path = tree.getPath(hash4);
+		path.set(1, Pair.of(Sha256Hash.ZERO_HASH, Sha256Hash.ZERO_HASH));
+
+		// then
+		assertFalse("Path should be not valid", MerkleTree.verifyPath(hash4, tree.getRoot(), path));
+	}
+
+	@Test
+	public void shouldFailValidationIfHashChanged() {
+		// given
+		MerkleTree tree = new MerkleTree();
+		tree.buildTree(hashList);
+
+		// when
+		List<Pair<Sha256Hash, Sha256Hash>> path = tree.getPath(hash4);
+
+		// then
+		assertFalse("Path should be not valid", MerkleTree.verifyPath(Sha256Hash.ZERO_HASH, tree.getRoot(), path));
 	}
 }
