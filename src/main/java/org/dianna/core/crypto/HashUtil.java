@@ -2,6 +2,7 @@ package org.dianna.core.crypto;
 
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
 
@@ -37,5 +38,9 @@ public class HashUtil {
 		string.append(block.getMerkleRootHash()).append("\n");
 
 		return Sha256Hash.createDouble(string.toString().getBytes());
+	}
+	
+	public static Sha256Hash createDoubleHash(Sha256Hash leftHash, Sha256Hash rightHash){
+		return Sha256Hash.createDouble(ArrayUtils.addAll(leftHash.getBytes(), rightHash.getBytes()));
 	}
 }

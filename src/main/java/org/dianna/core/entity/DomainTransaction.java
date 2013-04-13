@@ -5,6 +5,8 @@
 
 package org.dianna.core.entity;
 
+import org.dianna.core.crypto.HashUtil;
+
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.ECKey.ECDSASignature;
 import com.google.bitcoin.core.Sha256Hash;
@@ -15,6 +17,8 @@ import com.google.bitcoin.core.Sha256Hash;
  * @author ivan
  */
 public class DomainTransaction extends Entity {
+	private Sha256Hash hash;
+
 	/**
 	 * Hash of referenced bitcoin transaction with fee
 	 */
@@ -45,7 +49,6 @@ public class DomainTransaction extends Entity {
 	 * Transaction signature
 	 */
 	private String signature;
-	
 
 	public Sha256Hash getFeeTransaction() {
 		return feeTransaction;
@@ -93,6 +96,17 @@ public class DomainTransaction extends Entity {
 
 	public void setSignature(String signature) {
 		this.signature = signature;
+	}
+
+	public Sha256Hash getHash() {
+		if (hash == null) {
+			hash = HashUtil.getHash(this);
+		}
+		return hash;
+	}
+
+	public void setHash(Sha256Hash hash) {
+		this.hash = hash;
 	}
 
 }

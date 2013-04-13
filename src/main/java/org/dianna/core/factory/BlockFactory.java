@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.dianna.core.DiannaSettings;
 import org.dianna.core.crypto.HashUtil;
+import org.dianna.core.crypto.MerkleTree;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
 import org.dianna.core.store.BlockStore;
@@ -42,11 +43,15 @@ public class BlockFactory implements BlockStoreListener {
 	}
 
 	public synchronized void addTransaction(DomainTransaction domainTransaction) {
-		newBlock.getTransactions().add(domainTransaction);
-		newBlock.setMerkleRootHash(null);
-		newBlock.setHash(HashUtil.getHash(newBlock));
+		List<DomainTransaction> transactions = newBlock.getTransactions();
+		transactions.add(domainTransaction);
 
-		HashUtil.buildMerkleTree(newBlock.getTransactions());
+		MerkleTree merkleTree = new MerkleTree();
+		for (DomainTransaction tx : transactions) {
+			merkleTree.addLeaf(tx.getHash());
+		}
+
+		newBlock.setMerkleRootHash(merkleTree.getRoot());
 	}
 
 	public synchronized void setAuxData(Sha256Hash parentHash, List<Sha256Hash> auxBranch) {

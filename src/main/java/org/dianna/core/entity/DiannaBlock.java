@@ -3,6 +3,7 @@ package org.dianna.core.entity;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.dianna.core.crypto.HashUtil;
 import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.Sha256Hash;
@@ -107,11 +108,14 @@ public class DiannaBlock extends Entity {
 	}
 
 	public Sha256Hash getHash() {
+		if(hash==null){
+			hash = HashUtil.getHash(this);
+		}
 		return hash;
 	}
 
 	public void setHash(Sha256Hash hash) {
 		this.hash = hash;
 	}
-	
+
 }
