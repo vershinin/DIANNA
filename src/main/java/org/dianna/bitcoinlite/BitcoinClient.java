@@ -7,4 +7,6 @@ public interface BitcoinClient {
 
 	public Sha256Hash getCoinbase(Sha256Hash blockHash, int index);
 	public Transaction getTransaction(Sha256Hash transactionHash);
+
+	public void connectToNetwork();
 }

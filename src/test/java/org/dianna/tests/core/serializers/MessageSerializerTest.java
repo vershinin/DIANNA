@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.apache.commons.lang3.tuple.Pair;
 import org.dianna.core.crypto.HashUtil;
 import org.dianna.core.entity.DiannaBlock;
+import org.dianna.core.exception.InvalidMessageException;
 import org.dianna.core.message.BlockMessage;
 import org.dianna.core.serialization.MessageSerializer;
 import org.dianna.core.serialization.impl.JsonMessageSerializer;
@@ -20,7 +21,7 @@ public class MessageSerializerTest {
 	private MessageSerializer serializer = new JsonMessageSerializer();
 
 	@Test
-	public void shoudSerializeAndDeserializeMessage() {
+	public void shoudSerializeAndDeserializeMessage() throws InvalidMessageException {
 		// given
 		DiannaBlock block = TestDataFactory.buildCorrectBlock();
 		block.getAuxBranch().add(Pair.of(Sha256Hash.ZERO_HASH, Sha256Hash.ZERO_HASH));

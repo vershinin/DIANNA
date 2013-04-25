@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.bitcoin.core.Sha256Hash;
@@ -89,6 +90,9 @@ public class MerkleTree {
 	 * @param hashes
 	 */
 	public void buildTree(List<Sha256Hash> hashes) {
+		if(CollectionUtils.isEmpty(hashes)){
+			throw new IllegalStateException("Cannot build merkle tree for empty hashes list");
+		}
 		List<Node> leaves = new ArrayList<MerkleTree.Node>(hashes.size());
 		for (Sha256Hash sha256Hash : hashes) {
 			Node n = new Node();

@@ -3,6 +3,7 @@ package org.dianna.network.handler;
 import net.tomp2p.peers.PeerAddress;
 
 import org.dianna.core.entity.DiannaBlock;
+import org.dianna.core.exception.InvalidMessageException;
 import org.dianna.core.exception.ValidationException;
 import org.dianna.core.message.BlockMessage;
 import org.dianna.core.message.Message;
@@ -29,16 +30,21 @@ public class BlockHandler implements Handler {
 	}
 
 	@Override
-	public Message handle(PeerAddress peer, Message message) {
+	public Message handle(PeerAddress peer, Message message) throws InvalidMessageException {
 		BlockMessage block = (BlockMessage) message;
 		if (log.isDebugEnabled()) {
 			log.debug("New block recieved from {} {}", peer.getInetAddress(), block.toString());
 		}
 		DiannaBlock b = block.getBlock();
+		if (1 == 1) {
+			throw new InvalidMessageException("Test");
+		}
 		try {
 			blockStore.addBlock(b);
+
 		} catch (ValidationException e) {
 			log.warn("Recieved block is invalid", e);
+			throw new InvalidMessageException(e);
 		}
 		return null;
 	}

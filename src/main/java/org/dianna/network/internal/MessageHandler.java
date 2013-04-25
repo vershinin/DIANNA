@@ -4,6 +4,7 @@ import java.util.Map;
 
 import net.tomp2p.peers.PeerAddress;
 
+import org.dianna.core.exception.InvalidMessageException;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
 import org.dianna.network.handler.Handler;
@@ -35,12 +36,15 @@ public class MessageHandler {
 	 * @param message
 	 * @return response message
 	 */
-	public Message handleMessage(PeerAddress peer, Message message) {
+	public Message handleMessage(PeerAddress peer, Message message) throws InvalidMessageException {
+		logger.info("New message recieved from {}", peer);
+
 		Handler handler = handlers.get(message.getType());
 		if (handler == null) {
 			logger.warn("Cannot handle message. Handler not set.");
 			return null;
 		}
+
 		return handler.handle(peer, message);
 	}
 

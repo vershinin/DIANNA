@@ -1,7 +1,9 @@
 package org.dianna.core.serialization.impl;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.dianna.core.exception.InvalidMessageException;
 import org.dianna.core.message.BlockMessage;
+import org.dianna.core.message.ErrorMessage;
 import org.dianna.core.message.Handshake;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
@@ -50,14 +52,14 @@ public class JsonMessageSerializer implements MessageSerializer {
 	 * @see org.dianna.core.serialization.MessageSerializer#deserialize(byte[])
 	 */
 	@Override
-	public Message deserialize(byte[] msg) {
+	public Message deserialize(byte[] msg) throws InvalidMessageException {
 		JsonElement element = new JsonParser().parse(new String(msg));
 		JsonObject jsonObject = element.getAsJsonObject();
 		MessageType messageType = MessageType.valueOf(jsonObject.get("type").getAsString());
 		return createMessage(messageType, element);
 	}
 
-	private Message createMessage(MessageType messageType, JsonElement element) {
+	private Message createMessage(MessageType messageType, JsonElement element) throws InvalidMessageException {
 		switch (messageType) {
 		case BLOCK:
 			return gson.fromJson(element, BlockMessage.class);
@@ -69,10 +71,11 @@ public class JsonMessageSerializer implements MessageSerializer {
 			return gson.fromJson(element, Pong.class);
 		case TRANSACTION:
 			//
+		case ERROR:
+			return gson.fromJson(element, ErrorMessage.class);
 		default:
-			break;
+			throw new InvalidMessageException("Unknown message");
 		}
-		return null;
 	}
 
 }

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import net.tomp2p.peers.PeerAddress;
 
+import org.dianna.core.exception.InvalidMessageException;
 import org.dianna.core.message.BlockMessage;
 import org.dianna.core.message.Message;
 import org.dianna.core.message.Message.MessageType;
@@ -34,7 +35,7 @@ public class MessageHandlerTest {
 	}
 
 	@Test
-	public void shouldBeAbleToAddHandlers() {
+	public void shouldBeAbleToAddHandlers() throws InvalidMessageException {
 		// given
 		handler.addHandler(blockHandler);
 		// when
@@ -44,7 +45,7 @@ public class MessageHandlerTest {
 	}
 
 	@Test
-	public void shouldBeAbleToRemoveHandlers() {
+	public void shouldBeAbleToRemoveHandlers() throws InvalidMessageException {
 		// given
 		handler.addHandler(blockHandler);
 		handler.removeHandler(blockHandler);

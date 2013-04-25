@@ -23,4 +23,10 @@ public class BitcoinClientStub implements BitcoinClient {
 		return null;
 	}
 
+	@Override
+	public void connectToNetwork() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

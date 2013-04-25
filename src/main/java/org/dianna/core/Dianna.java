@@ -10,12 +10,16 @@ import org.dianna.core.entity.DomainTransaction;
 import org.dianna.core.exception.ValidationException;
 import org.dianna.core.factory.BlockFactory;
 import org.dianna.core.message.BlockMessage;
+import org.dianna.core.serialization.MessageSerializer;
 import org.dianna.core.serialization.impl.JsonMessageSerializer;
+import org.dianna.core.settings.DiannaSettings;
 import org.dianna.core.store.BlockStore;
 import org.dianna.core.validators.BlockValidator;
 import org.dianna.network.handler.BlockHandler;
+import org.dianna.network.handler.broadcast.DiannaBroadcastHandler;
 import org.dianna.network.internal.DiannaRawDataReplay;
 import org.dianna.network.internal.MessageHandler;
+import org.dianna.network.internal.PeerFactory;
 import org.dianna.network.server.DiannaPeer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,23 +41,36 @@ public class Dianna {
 	private BlockValidator blockValidator;
 	private BlockFactory blockFactory;
 
+	private MessageSerializer serializer;
+
 	public Dianna(DiannaSettings settings) {
 		this.settings = settings;
 		bitcoinClient = new BitcoinClientStub();
-		peer = new DiannaPeer(settings);
+		blockValidator = new BlockValidator(bitcoinClient);
+		blockStore = new BlockStore(blockValidator);
+		
+		initDiannaPeer();
 
 		blockFactory = new BlockFactory(settings);
 
-		blockValidator = new BlockValidator(bitcoinClient);
+		
 
-		blockStore = new BlockStore(blockValidator);
+		peer.setSerializer(serializer);
 
+	}
+
+	private void initDiannaPeer() {
 		DiannaRawDataReplay replay = new DiannaRawDataReplay();
-		replay.setSerializer(new JsonMessageSerializer());
+		serializer = new JsonMessageSerializer();
+		replay.setSerializer(serializer);
 		MessageHandler messageHandler = new MessageHandler();
 		messageHandler.addHandler(new BlockHandler(blockStore));
-
 		replay.setMessageHandler(messageHandler);
+
+		DiannaBroadcastHandler broadcastHandler = new DiannaBroadcastHandler(messageHandler, serializer);
+		PeerFactory peerFactory = new PeerFactory(settings, broadcastHandler);
+		peer = new DiannaPeer(settings, peerFactory);
+
 		peer.setReplay(replay);
 	}
 
@@ -62,7 +79,14 @@ public class Dianna {
 	}
 
 	public void connect() throws IOException, InterruptedException {
-		peer.connectToNetwork();
+		bitcoinClient.connectToNetwork();
+		peer.listen();
+	}
+
+	public void bootstrap() throws InterruptedException {
+		peer.bootstrap(settings.getBootstrapAddress());
+		DiannaBlock block = blockFactory.build();
+		peer.broadcast(new BlockMessage(block));
 	}
 
 	public String getBlockHash() {
@@ -75,7 +99,7 @@ public class Dianna {
 
 	public void broadcastBlock(AuxData auxData) {
 		DiannaBlock block = blockFactory.build();
-	//	block.setAuxBranch(auxData.getAuxMerkleBranch());
+		// block.setAuxBranch(auxData.getAuxMerkleBranch());
 		block.setCoinbaseTxIndex(auxData.getCoinbaseTxIndex());
 		block.setParentBlockHash(auxData.getParentBlockHash());
 

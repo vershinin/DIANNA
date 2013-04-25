@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dianna.core.Dianna;
-import org.dianna.core.DiannaSettings;
 import org.dianna.core.crypto.HashUtil;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
+import org.dianna.core.settings.DiannaSettings;
 import org.dianna.core.store.BlockStore;
 import org.dianna.core.store.BlockStore.BlockStoreListener;
 import org.joda.time.DateTime;
