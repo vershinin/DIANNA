@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.dianna.bitcoinlite.BitcoinClient;
 import org.dianna.bitcoinlite.BitcoinClientStub;
+import org.dianna.core.entity.AuxBlock;
 import org.dianna.core.entity.AuxData;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
@@ -21,8 +22,13 @@ import org.dianna.network.internal.DiannaRawDataReplay;
 import org.dianna.network.internal.MessageHandler;
 import org.dianna.network.internal.PeerFactory;
 import org.dianna.network.server.DiannaPeer;
+import org.dianna.rpc.JsonRpcHandler;
+import org.dianna.rpc.JsonRpcServer;
+import org.dianna.rpc.handlers.GetAuxBlockHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.thetransactioncompany.jsonrpc2.server.Dispatcher;
 
 /**
  * This is main dianna client class
@@ -56,7 +62,7 @@ public class Dianna {
 		
 
 		peer.setSerializer(serializer);
-
+		initRpc();
 	}
 
 	private void initDiannaPeer() {
@@ -72,6 +78,30 @@ public class Dianna {
 		peer = new DiannaPeer(settings, peerFactory);
 
 		peer.setReplay(replay);
+	}
+	
+	private void initRpc(){
+		Dispatcher dispatcher = new Dispatcher();
+		dispatcher.register(new GetAuxBlockHandler(new DiannaAuxBlockHandler() {
+			@Override
+			public void postAuxData(AuxData auxData) {
+				
+			}
+			@Override
+			public AuxBlock getAuxBlock() {
+				AuxBlock aux = new AuxBlock();
+				aux.setChainId(2);
+				aux.setHash(blockFactory.getNewBlockHash().toString());
+				aux.setTarget("00000000000000000000000000000000000000000000000000000000ffff0300");
+				return aux;
+			}
+		}));
+		JsonRpcHandler rpcHandler = new JsonRpcHandler(dispatcher);
+		try {
+			JsonRpcServer server = new JsonRpcServer(settings, rpcHandler);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void initHandlers() {
@@ -89,6 +119,7 @@ public class Dianna {
 		peer.broadcast(new BlockMessage(block));
 	}
 
+	
 	public String getBlockHash() {
 		return blockFactory.getNewBlockHash().toString();
 	}
@@ -115,4 +146,5 @@ public class Dianna {
 	public String getRecord(String key) {
 		return null;
 	}
+
 }

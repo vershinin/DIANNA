@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringReader;
 
 import javax.servlet.ServletException;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dianna.rpc.JsonRpcHandler;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
@@ -44,14 +42,6 @@ public class JsonRpcHandlerTest {
 	
 	@Mock(answer= Answers.RETURNS_DEEP_STUBS)
 	private HttpServletResponse res;
-	
-	@Mock
-	private PrintWriter printWriter;
-	
-	@Before
-	public void setUp(){
-		//given(res.getWriter()).willReturn(printWriter);
-	}
 	
 	@Test
 	public void shouldReturnErrorOnEmptyRequest() throws IOException, ServletException {

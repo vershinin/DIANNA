@@ -3,6 +3,7 @@ package org.dianna.gui;
 import org.dianna.core.Dianna;
 import org.dianna.core.settings.DiannaSettings;
 import org.dianna.gui.debug.DebugWindow;
+import org.dianna.rpc.JsonRpcServer;
 
 public class DiannaUI {
 	private Dianna dianna;
@@ -14,7 +15,7 @@ public class DiannaUI {
 		DebugWindow debug = new DebugWindow(dianna);
 		debug.pack();
 		debug.setVisible(true);
-
+		
 		// try {
 		// dianna.connect();
 		// } catch (IOException e) {

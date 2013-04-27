@@ -5,10 +5,9 @@ import org.eclipse.jetty.server.Server;
 
 public class JsonRpcServer {
 	
-	public JsonRpcServer(DiannaSettings settings) throws Exception {
+	public JsonRpcServer(DiannaSettings settings, JsonRpcHandler rpcHandler) throws Exception {
 		Server server = new Server(settings.getJsonRpcPort());
+		server.setHandler(rpcHandler);
 		server.start();
-		server.join();
-		
 	}
 }
