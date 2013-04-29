@@ -3,9 +3,9 @@ package org.dianna.tests.builders;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.dianna.core.crypto.HashUtil;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
+import org.dianna.core.utils.HashUtil;
 import org.joda.time.DateTime;
 
 import com.google.bitcoin.core.ECKey;

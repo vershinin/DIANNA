@@ -5,7 +5,7 @@
 
 package org.dianna.core.entity;
 
-import org.dianna.core.crypto.HashUtil;
+import org.dianna.core.utils.HashUtil;
 
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.ECKey.ECDSASignature;

@@ -3,12 +3,12 @@ package org.dianna.tests.core.serializers;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.dianna.core.crypto.HashUtil;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.exception.InvalidMessageException;
 import org.dianna.core.message.BlockMessage;
 import org.dianna.core.serialization.MessageSerializer;
 import org.dianna.core.serialization.impl.JsonMessageSerializer;
+import org.dianna.core.utils.HashUtil;
 import org.dianna.tests.builders.TestDataFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;

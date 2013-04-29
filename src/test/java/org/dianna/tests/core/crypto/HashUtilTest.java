@@ -5,9 +5,9 @@ import static org.junit.Assert.assertNotEquals;
 
 import java.math.BigDecimal;
 
-import org.dianna.core.crypto.HashUtil;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
+import org.dianna.core.utils.HashUtil;
 import org.dianna.tests.builders.TestDataFactory;
 import org.joda.time.DateTime;
 import org.junit.Test;

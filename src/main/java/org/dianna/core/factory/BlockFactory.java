@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dianna.core.Dianna;
-import org.dianna.core.crypto.HashUtil;
 import org.dianna.core.entity.DiannaBlock;
 import org.dianna.core.entity.DomainTransaction;
 import org.dianna.core.settings.DiannaSettings;
 import org.dianna.core.store.BlockStore;
 import org.dianna.core.store.BlockStore.BlockStoreListener;
+import org.dianna.core.utils.HashUtil;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

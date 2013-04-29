@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.dianna.core.Dianna;
-import org.dianna.core.crypto.CryptoUtil;
 import org.dianna.core.entity.DomainTransaction;
+import org.dianna.core.utils.CryptoUtil;
 
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.Sha256Hash;

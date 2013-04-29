@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.dianna.core.crypto.MerkleTree;
+import org.dianna.core.utils.MerkleTree;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;

@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.dianna.core.crypto.CryptoUtil;
+import org.dianna.core.utils.CryptoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

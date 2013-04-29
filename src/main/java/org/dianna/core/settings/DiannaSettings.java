@@ -34,6 +34,9 @@ public class DiannaSettings {
 
 	@Parameter(names = "-rpcPort")
 	private Integer jsonRpcPort = 7701;
+	
+	@Parameter(names = "-chainId")
+	private Integer chainId = 3;
 
 	public InetAddress getBootstrapAddress() {
 		return bootstrapAddress;
@@ -105,6 +108,14 @@ public class DiannaSettings {
 
 	public Integer getJsonRpcPort() {
 		return this.jsonRpcPort ;
+	}
+
+	public Integer getChainId() {
+		return chainId;
+	}
+
+	public void setChainId(Integer chainId) {
+		this.chainId = chainId;
 	}
 
 }

@@ -1,4 +1,4 @@
-package org.dianna.core.crypto;
+package org.dianna.core.utils;
 
 import java.util.ArrayList;
 import java.util.List;

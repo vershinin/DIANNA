@@ -5,7 +5,7 @@ import java.util.concurrent.Future;
 
 import org.dianna.bitcoinlite.impl.BitcoinClient;
 import org.dianna.bitcoinlite.impl.BitcoinException;
-import org.dianna.core.crypto.CryptoUtil;
+import org.dianna.core.utils.CryptoUtil;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

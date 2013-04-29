@@ -15,6 +15,7 @@ import org.dianna.core.serialization.MessageSerializer;
 import org.dianna.core.serialization.impl.JsonMessageSerializer;
 import org.dianna.core.settings.DiannaSettings;
 import org.dianna.core.store.BlockStore;
+import org.dianna.core.utils.CryptoUtil;
 import org.dianna.core.validators.BlockValidator;
 import org.dianna.network.handler.BlockHandler;
 import org.dianna.network.handler.broadcast.DiannaBroadcastHandler;
@@ -28,6 +29,8 @@ import org.dianna.rpc.handlers.GetAuxBlockHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.bitcoin.core.ECKey;
+import com.google.bitcoin.core.Sha256Hash;
 import com.thetransactioncompany.jsonrpc2.server.Dispatcher;
 
 /**
@@ -54,12 +57,10 @@ public class Dianna {
 		bitcoinClient = new BitcoinClientStub();
 		blockValidator = new BlockValidator(bitcoinClient);
 		blockStore = new BlockStore(blockValidator);
-		
+
 		initDiannaPeer();
 
 		blockFactory = new BlockFactory(settings);
-
-		
 
 		peer.setSerializer(serializer);
 		initRpc();
@@ -79,18 +80,27 @@ public class Dianna {
 
 		peer.setReplay(replay);
 	}
-	
-	private void initRpc(){
+
+	private void initRpc() {
+		DomainTransaction t = new DomainTransaction();
+		t.setDomain("test");
+		t.setValue("etst");
+		t.setFeeTransaction(Sha256Hash.ZERO_HASH);
+		ECKey key = new ECKey();
+		t.setNextPubkey(key);
+		t.setSignature(CryptoUtil.signTransaction(t, key));
+		addTransaction(t);
 		Dispatcher dispatcher = new Dispatcher();
 		dispatcher.register(new GetAuxBlockHandler(new DiannaAuxBlockHandler() {
 			@Override
-			public void postAuxData(AuxData auxData) {
-				
+			public void postAuxData(Sha256Hash blockHash, AuxData auxData) {
+
 			}
+
 			@Override
 			public AuxBlock getAuxBlock() {
 				AuxBlock aux = new AuxBlock();
-				aux.setChainId(2);
+				aux.setChainId(settings.getChainId());
 				aux.setHash(blockFactory.getNewBlockHash().toString());
 				aux.setTarget("00000000000000000000000000000000000000000000000000000000ffff0300");
 				return aux;
@@ -119,7 +129,6 @@ public class Dianna {
 		peer.broadcast(new BlockMessage(block));
 	}
 
-	
 	public String getBlockHash() {
 		return blockFactory.getNewBlockHash().toString();
 	}

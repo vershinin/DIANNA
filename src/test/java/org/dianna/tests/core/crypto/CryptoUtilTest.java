@@ -3,8 +3,8 @@ package org.dianna.tests.core.crypto;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.dianna.core.crypto.CryptoUtil;
 import org.dianna.core.entity.DomainTransaction;
+import org.dianna.core.utils.CryptoUtil;
 import org.dianna.tests.builders.TestDataFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
