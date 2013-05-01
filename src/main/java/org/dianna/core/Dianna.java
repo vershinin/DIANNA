@@ -94,15 +94,15 @@ public class Dianna {
 		dispatcher.register(new GetAuxBlockHandler(new DiannaAuxBlockHandler() {
 			@Override
 			public void postAuxData(Sha256Hash blockHash, AuxData auxData) {
-
+				broadcastBlock(auxData);
 			}
 
 			@Override
 			public AuxBlock getAuxBlock() {
 				AuxBlock aux = new AuxBlock();
 				aux.setChainId(settings.getChainId());
-				aux.setHash(blockFactory.getNewBlockHash().toString());
-				aux.setTarget("00000000000000000000000000000000000000000000000000000000ffff0300");
+				aux.setHash(blockFactory.getCurrentBlockHash().toString());
+				aux.setTarget(blockFactory.getCurrentTarget());
 				return aux;
 			}
 		}));
@@ -130,7 +130,7 @@ public class Dianna {
 	}
 
 	public String getBlockHash() {
-		return blockFactory.getNewBlockHash().toString();
+		return blockFactory.getCurrentBlockHash().toString();
 	}
 
 	public void addTransaction(DomainTransaction tx) {
@@ -139,7 +139,7 @@ public class Dianna {
 
 	public void broadcastBlock(AuxData auxData) {
 		DiannaBlock block = blockFactory.build();
-		// block.setAuxBranch(auxData.getAuxMerkleBranch());
+		//block.setAuxBranch(auxData.getAuxMerkleBranch());
 		block.setCoinbaseTxIndex(auxData.getCoinbaseTxIndex());
 		block.setParentBlockHash(auxData.getParentBlockHash());
 

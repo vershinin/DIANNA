@@ -3,6 +3,7 @@ package org.dianna.rpc.handlers;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dianna.core.DiannaAuxBlockHandler;
 import org.dianna.core.entity.AuxBlock;
@@ -54,6 +55,10 @@ public class GetAuxBlockHandler implements RequestHandler {
 		}
 
 		List<Object> positionalParams = request.getPositionalParams();
+		if (CollectionUtils.isEmpty(positionalParams) || positionalParams.size() != 2) {
+			return new JSONRPC2Response(JSONRPC2Error.INVALID_PARAMS, request.getID());
+		}
+
 		String hash = (String) positionalParams.get(0);
 		String data = (String) positionalParams.get(1);
 		log.info("Got merged mining info for block with hash {}", hash);
@@ -65,19 +70,8 @@ public class GetAuxBlockHandler implements RequestHandler {
 		}
 
 		dianna.postAuxData(new Sha256Hash(hash), auxData);
-
-		return new JSONRPC2Response(false, request.getID());
-	}
-
-	private Transaction readTransaction(byte[] bytes) {
-		try {
-			Transaction tx = new Transaction(null, bytes);
-			return tx;
-		} catch (ProtocolException e) {
-			log.error("Cannot parse transaction from getauxblock request");
-			return null;
-		}
-
+		
+		return new JSONRPC2Response(true, request.getID());
 	}
 
 	/**
@@ -107,6 +101,16 @@ public class GetAuxBlockHandler implements RequestHandler {
 		auxData.setAuxMerkleBranch(mergeMiningMerkleLink);
 		auxData.setCoinbaseTxIndex(0);
 		return auxData;
+	}
+
+	private Transaction readTransaction(byte[] bytes) {
+		try {
+			Transaction tx = new Transaction(null, bytes);
+			return tx;
+		} catch (ProtocolException e) {
+			log.error("Cannot parse transaction from getauxblock request");
+			return null;
+		}
 	}
 
 	@SuppressWarnings("unused")

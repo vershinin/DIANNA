@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import com.google.bitcoin.core.Sha256Hash;
 
 public class DiannaBlock extends Entity {
+	private Integer height;
 
 	// Header
 	private Sha256Hash hash;
@@ -113,6 +114,14 @@ public class DiannaBlock extends Entity {
 
 	public void setHash(Sha256Hash hash) {
 		this.hash = hash;
+	}
+
+	public Integer getHeight() {
+		return height;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
 	}
 
 }
